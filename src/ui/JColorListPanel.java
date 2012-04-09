@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,23 +57,50 @@ public class JColorListPanel extends JPanel{
 	private JPanel getJButtonPanel(){
 		if(jButtonPanel==null){
 			jButtonPanel = new JPanel();
-			JButton button = new JButton(">");
-			button.setMargin(new Insets(0,0,0,0));
-			button.setFont(new Font("Arial", Font.PLAIN,8));
-			button.setPreferredSize(new Dimension(20, 20));
-			button.addActionListener(new ActionListener(){
+			jButtonPanel.setLayout(new GridLayout(2,1));
+			JSmallButton addButton = new JSmallButton(">");
+			JSmallButton removeButton = new JSmallButton("x");
+			addButton.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					addColorToList();
 				}
 			});
-			jButtonPanel.add(button);
+			removeButton.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					removeColorToList();
+				}
+			});
+			jButtonPanel.add(addButton);
+			jButtonPanel.add(removeButton);
 		}
 		return jButtonPanel;
 	}
-
-	protected void addColorToList() {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * a JButton with some modifications on the default size and fontsize.
+	 * @author Niclas
+	 *
+	 */
+	private class JSmallButton extends JButton{
+		public JSmallButton(String s){
+			super(s);
+			this.setMargin(new Insets(0,0,0,0));
+			this.setFont(new Font("Arial", Font.PLAIN,8));
+			this.setPreferredSize(new Dimension(20, 20));
+		}
+	}
+	/**
+	 * adds a color with the current values of the textfields to the list
+	 */
+	private void addColorToList() {
+		
+	}
+	/**
+	 * removes the selected color from the list
+	 */
+	private void removeColorToList() {
 		
 	}
 }

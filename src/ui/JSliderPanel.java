@@ -13,7 +13,10 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
+/**
+ * a panel containing the sliders, labels and textfields.
+ * @author Niclas
+ */
 public class JSliderPanel extends JPanel implements ChangeListener,
 		ActionListener {
 	
@@ -29,14 +32,17 @@ public class JSliderPanel extends JPanel implements ChangeListener,
 	 * the textfield, which contain the current value of red, green, and blue
 	 */
 	private JTextField[] textFields=null;
-	
 	/**
-	 * creates a panel containing the sliders labels and textfields, or returns the existing
-	 * @return panel containing the sliders
+	 *	used to synchronize the color's value between the sliders, textfields and the picture. 
 	 */
+	private GUIUpdater updater;
 	
-	public JSliderPanel(){
+	public JSliderPanel(GUIUpdater updater){
 		super();
+		this.updater=updater;
+		initialize();
+	}
+	private void initialize() {
 		this.setLayout(new GridLayout(3,2));
 		this.add(new JLabel("red"),0);
 		this.add(getRgbSliders()[0],1);
@@ -88,7 +94,7 @@ public class JSliderPanel extends JPanel implements ChangeListener,
 		int red = getRgbSliders()[0].getValue();
 		int green = getRgbSliders()[1].getValue();
 		int blue = getRgbSliders()[2].getValue();
-		GUIUpdater.update(red,green, blue);
+		updater.update(red,green, blue);
 	}
 	/**
 	 * notified when a textfield changes
@@ -101,11 +107,11 @@ public class JSliderPanel extends JPanel implements ChangeListener,
 			try{
 				color[i] = Integer.valueOf(getTextFields()[i].getText());
 				assert(color[i]>=MainWindow.MIN && color[i]<= MainWindow.MAX);
-			}catch(Exception ex){
+			}catch(Throwable ex){
 				System.out.println("Invalid input in a textfield.");
 			}
 		}
-		GUIUpdater.update(color[0], color[1], color[2]);
+		updater.update(color[0], color[1], color[2]);
 	}
 	/**
 	 * to be called when the selected color value has changed. updates the <code>textFields</code> values.
@@ -114,7 +120,7 @@ public class JSliderPanel extends JPanel implements ChangeListener,
 	 * @param blue between 0 and 100
 	 */
 	public void updateTextFields(int red, int green, int blue){
-		assert(red<MainWindow.MAX && green<MainWindow.MAX && blue<MainWindow.MAX);
+		assert(red<=MainWindow.MAX && green<=MainWindow.MAX && blue<=MainWindow.MAX);
 		assert(red>=MainWindow.MIN  && green>=MainWindow.MIN  && blue>=MainWindow.MIN );
 		getTextFields()[0].setText(""+red);
 		getTextFields()[1].setText(""+green);
@@ -127,7 +133,7 @@ public class JSliderPanel extends JPanel implements ChangeListener,
 	 * @param blue between 0 and 100
 	 */
 	public void updateSliders(int red, int green, int blue){
-		assert(red<MainWindow.MAX && green<MainWindow.MAX && blue<MainWindow.MAX);
+		assert(red<=MainWindow.MAX && green<=MainWindow.MAX && blue<=MainWindow.MAX);
 		assert(red>=MainWindow.MIN  && green>=MainWindow.MIN  && blue>=MainWindow.MIN );
 		getRgbSliders()[0].setValue(red);
 		getRgbSliders()[1].setValue(green);

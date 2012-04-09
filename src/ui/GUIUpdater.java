@@ -18,34 +18,9 @@ public class GUIUpdater{
 	 * the <code>JSliderPanel</code> to be updated. 
 	 */
 	private JSliderPanel sliderPanel;
-	/**
-	 * instance of this class
-	 */
-	private static GUIUpdater instance=null;
 	
-	private GUIUpdater(JSliderPanel sliderPanel, JRGBPicturePanel picturePanel){
-		this.picturePanel = picturePanel;
-		this.sliderPanel = sliderPanel;
-	}
-	/**
-	 * returns <code>instance</code>, a existing instance of this class, or creates a new one.
-	 * @return an instance of GUIUpdater
-	 */
-	public static GUIUpdater getInstance(JSliderPanel sliderPanel, JRGBPicturePanel picturePanel){
-		if(instance==null){
-			instance = new GUIUpdater(sliderPanel, picturePanel);
-		}
-		return instance;
-	}
-	/**
-	 * returns <code>instance</code>, a existing instance of this class, if one has been initialized.
-	 * @return an instance of GUIUpdater
-	 */
-	public static GUIUpdater getInstance(){
-		if(instance==null){
-			throw(new NoSuchElementException("No instance of GUIUpdater has yet been created"));
-		}
-		return instance;
+	public GUIUpdater(){
+		
 	}
 	
 	/**
@@ -55,8 +30,14 @@ public class GUIUpdater{
 	 * @param blue between 0 and 100
 	 */
 	public void update(int red, int green, int blue){
-		assert(red<256 && green<256 && blue<256);
-		assert(red>=0&& green>=0 && blue>=0);
-		
+		assert(red<=MainWindow.MAX && green<=MainWindow.MAX && blue<=MainWindow.MAX);
+		assert(red>=MainWindow.MIN  && green>=MainWindow.MIN  && blue>=MainWindow.MIN );
+		sliderPanel.updateSliders(red, green, blue);
+		sliderPanel.updateTextFields(red, green, blue);
+		picturePanel.updateLeftCornerImage(red,green,blue);
+	}
+	public void setParameter(JSliderPanel sliderPanel, JRGBPicturePanel picturePanel){
+		this.picturePanel = picturePanel;
+		this.sliderPanel = sliderPanel;
 	}
 }

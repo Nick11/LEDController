@@ -38,9 +38,18 @@ public class JRGBPicturePanel extends JPanel implements MouseListener {
 	 * showing the color under the cursor
 	 */
 	private JLabel jColorLabel = null;
+	/**
+	 *	used to synchronize the color's value between the sliders, textfields and the picture. 
+	 */
+	private GUIUpdater updater;
+	/**
+	 * the size of one side of the little squares in the top left and right bottom corner
+	 */
+	private final int cornerSize=20;
 	
-	public JRGBPicturePanel(int width, int height){
+	public JRGBPicturePanel(GUIUpdater updater, int width, int height){
 		super();
+		this.updater=updater;
 		this.setSize(new Dimension(width, height));
 		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		loadImage();
@@ -74,9 +83,21 @@ public class JRGBPicturePanel extends JPanel implements MouseListener {
 		return jPictureLabel;
 	}
 	
-	private void updateImage(Color color){
-		for(int x=image.getWidth()-20; x<image.getWidth();x++){
-			for(int y=image.getHeight()-20;y<image.getHeight(); y++){
+	private void updateRightCornerImage(Color color){
+		for(int x=image.getWidth()-cornerSize; x<image.getWidth();x++){
+			for(int y=image.getHeight()-cornerSize;y<image.getHeight(); y++){
+				image.setRGB(x, y, color.getRGB());
+			}
+		}
+		getJPictureLabel().repaint();
+	}
+	public void updateLeftCornerImage(int red, int green, int blue){
+		red = red*255/100;
+		green = green*255/100;
+		blue= blue*255/100;
+		Color color = new Color(red, green, blue);
+		for(int x=0; x<cornerSize;x++){
+			for(int y=0 ;y<cornerSize; y++){
 				image.setRGB(x, y, color.getRGB());
 			}
 		}
@@ -87,7 +108,10 @@ public class JRGBPicturePanel extends JPanel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		Point point = e.getPoint();
 		Color color = new Color(image.getRGB(point.x, point.y));
-		System.out.println(color);
+		int red = (color.getRed()*100)/255;
+		int green = (color.getGreen()*100)/255;
+		int blue= (color.getBlue()*100)/255;
+		updater.update(red, green, blue);
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
@@ -103,7 +127,7 @@ public class JRGBPicturePanel extends JPanel implements MouseListener {
 			public void mouseMoved(MouseEvent e) {
 				Point point = e.getPoint();
 				Color color = new Color(image.getRGB(point.x, point.y));
-				updateImage(color);
+				updateRightCornerImage(color);
 				
 			}
 			

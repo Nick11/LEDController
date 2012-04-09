@@ -20,10 +20,14 @@ public class JChannelPanel extends JPanel{
 	}
 	
 	private void initialize() {
+		GUIUpdater updater = new GUIUpdater();
+		JSliderPanel sliderPanel = new JSliderPanel(updater);
+		JRGBPicturePanel picturePanel = new JRGBPicturePanel(updater, 100,100); 
 		this.setLayout(new GridBagLayout());
-		this.add(new JSliderPanel(),			setConstraints(0,0,1,1,0,0,1,1,GridBagConstraints.BOTH, GridBagConstraints.WEST));
-		this.add(new JRGBPicturePanel(100,100),	setConstraints(1,0,1,1,0,0,0.3,0.9,GridBagConstraints.BOTH, GridBagConstraints.WEST));
-		this.add(new JColorListPanel(),			setConstraints(2,0,1,1,0,0,0.1,0.9,GridBagConstraints.BOTH, GridBagConstraints.WEST));
+		this.add(sliderPanel, setConstraints(0,0,1,1,0,0,1,1,GridBagConstraints.BOTH, GridBagConstraints.WEST));
+		this.add(picturePanel, setConstraints(1,0,1,1,0,0,0.3,0.9,GridBagConstraints.BOTH, GridBagConstraints.WEST));
+		this.add(new JColorListPanel(), setConstraints(2,0,1,1,0,0,0.1,0.9,GridBagConstraints.BOTH, GridBagConstraints.WEST));
+		updater.setParameter(sliderPanel, picturePanel);
 	}
 	
 	/**
