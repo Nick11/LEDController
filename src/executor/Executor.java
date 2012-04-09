@@ -1,29 +1,19 @@
 package executor;
 
-import inputAdapters.CommandLine;
 import inputAdapters.GUIAdapter;
 import colorAverager.AbstractTimeColorAverager;
 
 public class Executor extends Thread {
 	private volatile RunningMode desiredRunningMode;
 	private RunningMode currentRunningMode;
-	//private static Executor instance = null;
 	
 	public Executor(RunningMode runningMode){
 		this.currentRunningMode = runningMode;
 		this.desiredRunningMode = runningMode;
-		
 	}
-	/*public static Executor getInstance(RunningMode runningMode){
-		if(instance == null){
-			instance = new Executor(runningMode);
-		}
-		return instance;
-	}*/
 	
 	@Override
 	public void run(){
-		//setUp(); cannot be done here
 		AbstractTimeColorAverager averager;
 		while(currentRunningMode.isRunning()){
 			averager = currentRunningMode.getColorAverager();
@@ -36,7 +26,6 @@ public class Executor extends Thread {
 				currentRunningMode = desiredRunningMode;
 			}
 		}
-		tearDown();
 	}
 	
 	private void setUp(){
@@ -57,12 +46,6 @@ public class Executor extends Thread {
 		GUIAdapter adapter = GUIAdapter.getInstance(runningMode1, new Executor[]{executor1, executor2});
 		adapter.start();
 		runningMode2.getOutputAdapter().startTransmission();
-		
-		/*try {
-			Thread.sleep(2000);
-		} catch(InterruptedException e) { }*/
-    	//CommandLine cmd = new CommandLine(runningMode,executor);
-    	//cmd.start();
     	executor1.start();
     	executor2.start();
 	}
