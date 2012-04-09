@@ -11,8 +11,7 @@ public class LEDOutputAdapter implements OutputAdapter {
 		int red = (color.getRed()*100)/255;
 		int green = (color.getGreen()*100)/255;
 		int blue = (color.getBlue()*100)/255;
-		int min = Math.min(Math.min(red, green), blue);
-		String message = "SC"+1+" R "+(red>min?(int)(red*2):(int)(red*0.5))+"; G "+(green>min?(int)(green*2):(int)(green*0.5))+"; B "+(blue>min?(int)(blue*2):(int)(blue*0.5))+";";
+		String message = "SC"+1+" R "+red+"; G "+green+"; B "+blue+";";
 		//System.out.println(message);
 		IOController controller = IOController.getInstance();
 		controller.sendMessageToLEDController(message);
