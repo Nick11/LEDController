@@ -1,24 +1,25 @@
 package executor;
 
+import inputAdapters.CommandLine;
+import inputAdapters.GUIAdapter;
 import colorAverager.AbstractTimeColorAverager;
-import ui.CommandLine;
 
 public class Executor extends Thread {
 	private volatile RunningMode desiredRunningMode;
 	private RunningMode currentRunningMode;
-	private static Executor instance = null;
+	//private static Executor instance = null;
 	
-	private Executor(RunningMode runningMode){
+	public Executor(RunningMode runningMode){
 		this.currentRunningMode = runningMode;
 		this.desiredRunningMode = runningMode;
 		
 	}
-	public static Executor getInstance(RunningMode runningMode){
+	/*public static Executor getInstance(RunningMode runningMode){
 		if(instance == null){
 			instance = new Executor(runningMode);
 		}
 		return instance;
-	}
+	}*/
 	
 	@Override
 	public void run(){
@@ -50,16 +51,19 @@ public class Executor extends Thread {
 	 */
 	public static void main(String[] args) {
 		RunningMode runningMode = RunningMode.getDefault();
-		Executor executor= Executor.getInstance(runningMode);
+		Executor executor1= new Executor(runningMode);
+		Executor executor2= new Executor(runningMode);
+		GUIAdapter adapter = GUIAdapter.getInstance(runningMode, new Executor[]{executor1, executor2});
+		adapter.start();
 		
-    	CommandLine cmd = new CommandLine(runningMode);
-    	cmd.start();
-    	executor.run();
+    	//CommandLine cmd = new CommandLine(runningMode,executor);
+    	//cmd.start();
+    	executor1.run();
+    	executor2.run();
 
 	}
 	public synchronized void setDesiredRunningMode(RunningMode desiredRunningMode){
 		this.desiredRunningMode = desiredRunningMode;
-		System.out.println("changed desiredRunningMode");
 	}
 
 }

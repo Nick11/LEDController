@@ -40,4 +40,16 @@ public class GUIUpdater{
 		this.picturePanel = picturePanel;
 		this.sliderPanel = sliderPanel;
 	}
+	/**
+	 * gets the current color from <code>sliderPanel.textFields</code>.
+	 * @return array with values between 0 and 100.
+	 */
+	public int[] getCurrentColor() {
+		int[] colors = sliderPanel.getTextFieldValues();
+		for(int i=0; i<colors.length;i++){
+			assert(colors[i]>=MainWindow.MIN && colors[i]<= MainWindow.MAX);
+		}
+		return colors;
+		
+	}
 }

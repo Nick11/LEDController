@@ -1,5 +1,7 @@
 package ui;
 
+import inputAdapters.GUIAdapter;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -8,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -30,11 +34,25 @@ public class JColorListPanel extends JPanel{
 	 * contains the add- and remove button.
 	 */
 	private JPanel jButtonPanel=null;
+	/**
+	 *	used to synchronize the color's value between the sliders, textfields and the picture. 
+	 */
+	private GUIUpdater updater;
+	/**
+	 *	id to identify the channel to be used. Beginning with 0.
+	 */
+	private final int ID;
 	
-	public JColorListPanel(){
+	public JColorListPanel(GUIUpdater updater, int id){
 		super();
+		this.updater=updater;
+		this.ID=id;
+		initialize();
+	}
+
+	private void initialize() {
 		this.setLayout(new GridBagLayout());
-		this.setMinimumSize(new Dimension(85, 100));
+		this.setMinimumSize(new Dimension(100, 100));
 		this.add(getJButtonPanel(), JChannelPanel.setConstraints(0,0, 1,3, 0,0, 0.1,1, GridBagConstraints.NONE, GridBagConstraints.WEST));
 		this.add(getJListScrollPanel(), JChannelPanel.setConstraints(1,0, 2,3, 0,0, 0.9,1, GridBagConstraints.BOTH, GridBagConstraints.WEST));
 	}
@@ -42,14 +60,17 @@ public class JColorListPanel extends JPanel{
 	private JScrollPane getJListScrollPanel(){
 		if(jScrollPanel== null){
 			jScrollPanel = new JScrollPane(getJColorList());
+			jScrollPanel.setMinimumSize(new Dimension(75, 100));
 		}
 	return jScrollPanel;
 	}
 	
 	private JList getJColorList(){
 		if(jColorList== null){
-			String[] data = {"255,255,255",""};
-			jColorList = new JList(data);
+			jColorList = new JList();
+			DefaultListModel model = new DefaultListModel();
+			model.add(0, "100,100,100");
+			jColorList.setModel(model);
 		}
 		return jColorList;
 	}
@@ -57,9 +78,11 @@ public class JColorListPanel extends JPanel{
 	private JPanel getJButtonPanel(){
 		if(jButtonPanel==null){
 			jButtonPanel = new JPanel();
-			jButtonPanel.setLayout(new GridLayout(2,1));
+			jButtonPanel.setLayout(new GridLayout(4,1));
 			JSmallButton addButton = new JSmallButton(">");
 			JSmallButton removeButton = new JSmallButton("x");
+			JSmallButton setButton = new JSmallButton("set");
+			JSmallButton playButton = new JSmallButton("play");
 			addButton.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -69,15 +92,28 @@ public class JColorListPanel extends JPanel{
 			removeButton.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					removeColorToList();
+					removeColorFromList();
+				}
+			});
+			setButton.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setColor();
+				}
+			});
+			playButton.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					playAllColors();
 				}
 			});
 			jButtonPanel.add(addButton);
 			jButtonPanel.add(removeButton);
+			jButtonPanel.add(setButton);
+			jButtonPanel.add(playButton);
 		}
 		return jButtonPanel;
 	}
-	
 	/**
 	 * a JButton with some modifications on the default size and fontsize.
 	 * @author Niclas
@@ -95,12 +131,48 @@ public class JColorListPanel extends JPanel{
 	 * adds a color with the current values of the textfields to the list
 	 */
 	private void addColorToList() {
-		
+		int[] color = updater.getCurrentColor();
+		DefaultListModel model = (DefaultListModel)(getJColorList().getModel());
+		model.add(model.getSize(), color[0]+","+color[1]+","+color[2]);
 	}
 	/**
 	 * removes the selected color from the list
 	 */
-	private void removeColorToList() {
-		
+	private void removeColorFromList() {
+		DefaultListModel model = (DefaultListModel)(getJColorList().getModel());
+		int[] indices = getJColorList().getSelectedIndices();
+		if(indices.length>0){
+			for(int i=0; i<indices.length; i++){
+				model.remove(indices[indices.length-1-i]);
+			}
+		}
+	}
+	private void playAllColors() {
+		DefaultListModel model = (DefaultListModel) getJColorList().getModel();
+		int[][] colors = new int[model.size()][3];
+		String element;
+		Scanner scan;
+		for(int i=0; i<model.size() ;i++){
+			element = (String) model.get(i);
+			scan = new Scanner(element);
+			scan.useDelimiter(",");
+			try{
+				colors[i][0] = Integer.valueOf(scan.next());
+				colors[i][1] = Integer.valueOf(scan.next());
+				colors[i][2] = Integer.valueOf(scan.next());
+			}catch(NumberFormatException e){e.printStackTrace(System.out); }
+		}
+		try{
+			GUIAdapter.getInstance().setColorSequence(colors,ID);
+		}catch(NoSuchElementException e){e.printStackTrace(System.out); }
+	}
+
+	private void setColor() {
+		int[] color = updater.getCurrentColor();
+		try{
+			GUIAdapter.getInstance().setSingleColor(color[0], color[1], color[2],ID);
+		}catch(NoSuchElementException e){
+			e.printStackTrace();
+		}
 	}
 }

@@ -102,15 +102,7 @@ public class JSliderPanel extends JPanel implements ChangeListener,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		assert(e.getSource().getClass().equals(JTextField.class));
-		int[] color = new int[3];
-		for(int i=0; i<getTextFields().length; i++){
-			try{
-				color[i] = Integer.valueOf(getTextFields()[i].getText());
-				assert(color[i]>=MainWindow.MIN && color[i]<= MainWindow.MAX);
-			}catch(Throwable ex){
-				System.out.println("Invalid input in a textfield.");
-			}
-		}
+		int[] color = getTextFieldValues();
 		updater.update(color[0], color[1], color[2]);
 	}
 	/**
@@ -138,6 +130,22 @@ public class JSliderPanel extends JPanel implements ChangeListener,
 		getRgbSliders()[0].setValue(red);
 		getRgbSliders()[1].setValue(green);
 		getRgbSliders()[2].setValue(blue);
+	}
+	/**
+	 * reads and returns values of <code>textFields</code>  as <code>int[]</code>
+	 * @return current values of <code>textFields</code>
+	 */
+	public int[] getTextFieldValues() {
+		int[] color = new int[3];
+		for(int i=0; i<getTextFields().length; i++){
+			try{
+				color[i] = Integer.valueOf(getTextFields()[i].getText());
+				assert(color[i]>=MainWindow.MIN && color[i]<= MainWindow.MAX);
+			}catch(Throwable ex){
+				System.out.println("Invalid input in a textfield.");
+			}
+		}
+		return color;
 	}
 	
 }

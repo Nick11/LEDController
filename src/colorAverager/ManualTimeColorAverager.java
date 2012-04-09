@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import adapter.OutputAdapter;
+
+import outputAdapters.OutputAdapter;
 
 public class ManualTimeColorAverager extends AbstractTimeColorAverager {
 	private ArrayList<Color> colors;
@@ -12,18 +13,20 @@ public class ManualTimeColorAverager extends AbstractTimeColorAverager {
 	private int noOutRefreshes;
 	private Color outColor;
 	private int outColorRefreshRate;
+	private int channelNo;
 	
 
 	private int colorNo =0;
 
-	public ManualTimeColorAverager(OutputAdapter outputAdapter, int readColorRefreshRate, int outColorRefreshRate, ArrayList<Color> colors) {
-		super(null, outputAdapter, readColorRefreshRate, outColorRefreshRate);
+	public ManualTimeColorAverager(OutputAdapter outputAdapter, int readColorRefreshRate, int outColorRefreshRate, ArrayList<Color> colors, int channelNo) {
+		super(null, outputAdapter, readColorRefreshRate, outColorRefreshRate, channelNo);
 		this.colors = colors;
 		this.currentRed = 0;
 		this.currentGreen = 0;
 		this.currentBlue = 0;
 		this.noOutRefreshes = (int) Math.floor((float)(readColorRefreshRate)/(float)(outColorRefreshRate));
 		this.outColorRefreshRate = outColorRefreshRate;
+		this.channelNo = channelNo;
 		
 	}
 
@@ -47,7 +50,7 @@ public class ManualTimeColorAverager extends AbstractTimeColorAverager {
             currentBlue += stepBlue;
            
             outColor = new Color(Math.round(currentRed), Math.round(currentGreen), Math.round(currentBlue));
-            setColor(outColor);
+            setColor(outColor, channelNo);
             try{
                 Thread.sleep(outColorRefreshRate);
             }catch (InterruptedException ex){ }

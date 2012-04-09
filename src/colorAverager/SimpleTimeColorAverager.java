@@ -1,28 +1,31 @@
 package colorAverager;
 
 import java.awt.Color;
+
+import outputAdapters.OutputAdapter;
 import colorReader.AbstractColorReader;
-import adapter.OutputAdapter;
 
 public class SimpleTimeColorAverager extends AbstractTimeColorAverager {
 	
 	private float futureRed, futureGreen, futureBlue, currentRed, currentGreen, currentBlue;
 	/**
-	 * How often the LEDs color is refreshed during on call of run().
+	 * see <code>RunningMode</code> for details concerning the following fields.
 	 */
 	private int noOutRefreshes;
 	private Color outColor;
 	private int outColorRefreshRate;
+	private int channelNo;
 	
-	public SimpleTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter, int readColorRefreshRate, int outColorRefreshRate) {
-		super(reader, outputAdapter,readColorRefreshRate, outColorRefreshRate);
+	public SimpleTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter, int readColorRefreshRate, int outColorRefreshRate, int channelNo) {
+		super(reader, outputAdapter,readColorRefreshRate, outColorRefreshRate, channelNo);
 		this.currentRed = 0;
 		this.currentGreen = 0;
 		this.currentBlue = 0;
 		this.noOutRefreshes = (int) Math.floor((float)(readColorRefreshRate)/(float)(outColorRefreshRate));
 		this.outColorRefreshRate = outColorRefreshRate;
+		this.channelNo = channelNo;
 	}
-
+	
 	@Override
 	public void run() {
 		Color futureColor = readOneFramesColor();
@@ -41,7 +44,7 @@ public class SimpleTimeColorAverager extends AbstractTimeColorAverager {
             currentBlue += stepBlue;
            
             outColor = new Color(Math.round(currentRed), Math.round(currentGreen), Math.round(currentBlue));
-            setColor(outColor);
+            setColor(outColor, channelNo);
             try{
                 Thread.sleep(outColorRefreshRate);
             }catch (InterruptedException ex){}

@@ -3,9 +3,11 @@ package executor;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import adapter.OutputAdapter;
-import adapter.PanelAndLEDOutputAdapter;
-import adapter.PanelOutputAdapter;
+import outputAdapters.LEDOutputAdapter;
+import outputAdapters.OutputAdapter;
+import outputAdapters.PanelAndLEDOutputAdapter;
+import outputAdapters.PanelOutputAdapter;
+
 import colorAverager.AbstractTimeColorAverager;
 import colorAverager.ManualTimeColorAverager;
 import colorAverager.SimpleTimeColorAverager;
@@ -13,7 +15,6 @@ import colorReader.AbstractColorReader;
 import colorReader.RandomColorReader;
 import colorReader.SimplePixelReader;
 import colorReader.SolidColorReader;
-import adapter.LEDOutputAdapter;
 /**
  * Immutable data object. Changed by the UI and read by the <code>Executor</code>
  * This is introduced for synchronization purpose.
@@ -52,11 +53,15 @@ public class RunningMode {
     /**
      * determines which screen will be analyzed
      */
-    private final int screenNr;
+    private final int screenNo;
     /**
      * false if the program should stop running, true else.
      */
     private final boolean isRunning;
+    /**
+     * number of the channel of the LEDController hardware to be affected by this instance.
+     */
+    private final int channelNo;
     /**
      * WARNING: when creating a new instance, the ColorTimeAverager has to be created new.
      * It's the only object depending on the other fields of this class.
@@ -70,7 +75,7 @@ public class RunningMode {
      */
     public RunningMode(AbstractColorReader currentColorReader,OutputAdapter currentOutputAdapter,
 				AbstractTimeColorAverager currentColorAverager,
-				int readColorRefreshRate, int outColorRefreshRate, int screenNr, boolean isRunning) {
+				int readColorRefreshRate, int outColorRefreshRate, int screenNr, boolean isRunning, int channelNo) {
     	if(readColorRefreshRate<outColorRefreshRate){
     		throw(new IllegalArgumentException("readColorRefreshRatemust be larger than outColorRefreshRate.")); //not good to
     		//throw exceptions in the constructor. but this criteria is crucial.
@@ -80,8 +85,9 @@ public class RunningMode {
 		this.colorAverager = currentColorAverager;
 		this.readColorRefreshRate = readColorRefreshRate;
 		this.outColorRefreshRate = outColorRefreshRate;
-		this.screenNr = screenNr;
+		this.screenNo = screenNr;
 		this.isRunning = isRunning;
+		this.channelNo = channelNo;
 	}
 
 	public AbstractColorReader getColorReader() {
@@ -105,11 +111,14 @@ public class RunningMode {
 	}
 
 	public int getScreenNr() {
-		return screenNr;
+		return screenNo;
 	}
 
 	public boolean isRunning() {
 		return isRunning;
+	}
+	public int getChannelNo(){
+		return this.channelNo;
 	}
 	@Override
 	public boolean equals(Object runningMode){
@@ -118,16 +127,17 @@ public class RunningMode {
 
 	public static RunningMode getDefault() {
 		
-		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
+		OutputAdapter adapter =  new PanelOutputAdapter();
 		
 		int readColorRefreshRate = 1;
 		int outColorRefreshRate = 1;
 		int screenNr = 0;
+		int channelNr = 0;
 		AbstractColorReader colorReader = new  SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
-		AbstractTimeColorAverager averager = new SimpleTimeColorAverager(colorReader, adapter, readColorRefreshRate, outColorRefreshRate);
+		AbstractTimeColorAverager averager = new SimpleTimeColorAverager(colorReader, adapter, readColorRefreshRate, outColorRefreshRate, channelNr);
 		return new RunningMode(colorReader, adapter,
 				averager,
-				readColorRefreshRate, outColorRefreshRate, screenNr, true);
+				readColorRefreshRate, outColorRefreshRate, screenNr, true, channelNr);
 	}
     
 }

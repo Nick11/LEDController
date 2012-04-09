@@ -10,13 +10,15 @@ import javax.swing.JPanel;
  *
  */
 public class JChannelPanel extends JPanel{
+	/**
+	 * id to identify the channel to be used. Beginning with 0.
+	 */
+	private final int ID;
 	
-
-	
-	
-	public JChannelPanel(){
+	public JChannelPanel(int id){
 		super();
 		initialize();
+		this.ID=id;
 	}
 	
 	private void initialize() {
@@ -26,7 +28,7 @@ public class JChannelPanel extends JPanel{
 		this.setLayout(new GridBagLayout());
 		this.add(sliderPanel, setConstraints(0,0,1,1,0,0,1,1,GridBagConstraints.BOTH, GridBagConstraints.WEST));
 		this.add(picturePanel, setConstraints(1,0,1,1,0,0,0.3,0.9,GridBagConstraints.BOTH, GridBagConstraints.WEST));
-		this.add(new JColorListPanel(), setConstraints(2,0,1,1,0,0,0.1,0.9,GridBagConstraints.BOTH, GridBagConstraints.WEST));
+		this.add(new JColorListPanel(updater, ID), setConstraints(2,0,1,1,0,0,0.1,0.9,GridBagConstraints.BOTH, GridBagConstraints.WEST));
 		updater.setParameter(sliderPanel, picturePanel);
 	}
 	
