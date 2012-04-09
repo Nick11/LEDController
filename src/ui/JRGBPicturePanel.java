@@ -46,6 +46,10 @@ public class JRGBPicturePanel extends JPanel implements MouseListener {
 	 * the size of one side of the little squares in the top left and right bottom corner
 	 */
 	private final int cornerSize=20;
+	/**
+	 * ImageIcon of the rgb triangle
+	 */
+	private ImageIcon imageIcon;
 	
 	public JRGBPicturePanel(GUIUpdater updater, int width, int height){
 		super();
@@ -59,19 +63,11 @@ public class JRGBPicturePanel extends JPanel implements MouseListener {
 	 * loads the image located at <code>imagePath</code> ad stores it as <code>image</code>.
 	 * @return
 	 */
-	private boolean loadImage() {
-		BufferedImage img = null;
-		boolean success = true;
-		try {
-		    img = ImageIO.read(new File(imagePath));
-		} catch (IOException e) {
-			success = false;
-			System.out.println("Loading image failed.");
-		}
-		if(img != null){
-			image.getGraphics().drawImage(img, 0, 0, this.getWidth(), this.getHeight(), 0, 0, img.getWidth(), img.getHeight(),null);
-		}
-		return success;
+	private void loadImage() {
+		java.net.URL imageURL = JRGBPicturePanel.class.getResource("rgb.png");
+		imageIcon = new ImageIcon(imageURL);
+		Image im = imageIcon.getImage();
+		image.getGraphics().drawImage(im, 0, 0, this.getWidth(), this.getHeight(), 0, 0, im.getWidth(null), im.getHeight(null),null);
 	}
 	private JLabel getJPictureLabel(){
 		if(jPictureLabel == null){

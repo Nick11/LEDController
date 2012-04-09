@@ -45,8 +45,4 @@ public class MainWindow extends JFrame {
 		}
 		return jContentPane;
 	}
-	public static void main(String[] args){
-		MainWindow window = new MainWindow();
-		window.setVisible(true);
-	}
 }
