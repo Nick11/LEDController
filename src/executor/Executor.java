@@ -23,7 +23,7 @@ public class Executor extends Thread {
 	
 	@Override
 	public void run(){
-		setUp();
+		//setUp(); cannot be done here
 		AbstractTimeColorAverager averager;
 		while(currentRunningMode.isRunning()){
 			averager = currentRunningMode.getColorAverager();
@@ -50,17 +50,21 @@ public class Executor extends Thread {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RunningMode runningMode = RunningMode.getDefault();
-		Executor executor1= new Executor(runningMode);
-		Executor executor2= new Executor(runningMode);
-		GUIAdapter adapter = GUIAdapter.getInstance(runningMode, new Executor[]{executor1, executor2});
+		RunningMode runningMode1 = RunningMode.getDefault(0);
+		RunningMode runningMode2 = RunningMode.getDefault(1);
+		Executor executor1= new Executor(runningMode1);
+		Executor executor2= new Executor(runningMode2);
+		GUIAdapter adapter = GUIAdapter.getInstance(runningMode1, new Executor[]{executor1, executor2});
 		adapter.start();
+		runningMode2.getOutputAdapter().startTransmission();
 		
+		/*try {
+			Thread.sleep(2000);
+		} catch(InterruptedException e) { }*/
     	//CommandLine cmd = new CommandLine(runningMode,executor);
     	//cmd.start();
-    	executor1.run();
-    	executor2.run();
-
+    	executor1.start();
+    	executor2.start();
 	}
 	public synchronized void setDesiredRunningMode(RunningMode desiredRunningMode){
 		this.desiredRunningMode = desiredRunningMode;

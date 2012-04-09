@@ -6,8 +6,8 @@ public class PanelAndLEDOutputAdapter implements OutputAdapter {
 	private LEDOutputAdapter ledAdapter;
 	private PanelOutputAdapter panelAdapter;
 	public PanelAndLEDOutputAdapter(){
-		ledAdapter = new LEDOutputAdapter();
-		panelAdapter = new PanelOutputAdapter();
+		ledAdapter = LEDOutputAdapter.getInstance();
+		panelAdapter = PanelOutputAdapter.getInstance();
 	}
 
 	@Override

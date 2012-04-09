@@ -17,8 +17,8 @@ public class JChannelPanel extends JPanel{
 	
 	public JChannelPanel(int id){
 		super();
-		initialize();
 		this.ID=id;
+		initialize();
 	}
 	
 	private void initialize() {

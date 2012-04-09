@@ -40,8 +40,8 @@ public class MainWindow extends JFrame {
 			jContentPane = new JPanel();
 			LayoutManager layout = new GridLayout(2,1);
 			jContentPane.setLayout(layout);
-			jContentPane.add(new JChannelPanel(0), 0,0);
-			jContentPane.add(new JChannelPanel(1), 1,0);
+			jContentPane.add(new JChannelPanel(0), 0);
+			jContentPane.add(new JChannelPanel(1), 1);
 		}
 		return jContentPane;
 	}

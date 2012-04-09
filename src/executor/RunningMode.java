@@ -72,6 +72,7 @@ public class RunningMode {
      * @param outColorRefreshRate
      * @param screenNr
      * @param isRunning
+     * @param channelNo
      */
     public RunningMode(AbstractColorReader currentColorReader,OutputAdapter currentOutputAdapter,
 				AbstractTimeColorAverager currentColorAverager,
@@ -122,17 +123,16 @@ public class RunningMode {
 	}
 	@Override
 	public boolean equals(Object runningMode){
-		return false;
+		return false; //TODO
 	}
 
-	public static RunningMode getDefault() {
+	public static RunningMode getDefault(int channelNr) {
 		
-		OutputAdapter adapter =  new PanelOutputAdapter();
+		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
 		
-		int readColorRefreshRate = 1;
-		int outColorRefreshRate = 1;
+		int readColorRefreshRate = 20;
+		int outColorRefreshRate = 10;
 		int screenNr = 0;
-		int channelNr = 0;
 		AbstractColorReader colorReader = new  SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
 		AbstractTimeColorAverager averager = new SimpleTimeColorAverager(colorReader, adapter, readColorRefreshRate, outColorRefreshRate, channelNr);
 		return new RunningMode(colorReader, adapter,

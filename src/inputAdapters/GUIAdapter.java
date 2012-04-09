@@ -49,8 +49,8 @@ public class GUIAdapter extends Thread{
 	/**
 	 * default values for the refresh rates. in ms
 	 */
-	private final int SLOW = 3000;
-	private final int FAST = 20;
+	private final int SLOW = 1500;
+	private final int FAST = 10;
 	
 	private GUIAdapter(RunningMode mode, Executor[] executors){
 		super();
@@ -103,6 +103,7 @@ public class GUIAdapter extends Thread{
 		blue = blue*255/100;
 		Color color = new Color(red, green, blue);
 		reader = new SolidColorReader(color);
+		readColorRefreshRate=FAST;
 		channelNo = id;
 		setRunningMode();
 	}

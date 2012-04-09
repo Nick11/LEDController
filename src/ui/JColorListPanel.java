@@ -69,7 +69,6 @@ public class JColorListPanel extends JPanel{
 		if(jColorList== null){
 			jColorList = new JList();
 			DefaultListModel model = new DefaultListModel();
-			model.add(0, "100,100,100");
 			jColorList.setModel(model);
 		}
 		return jColorList;

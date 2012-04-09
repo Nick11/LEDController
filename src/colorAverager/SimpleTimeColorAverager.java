@@ -18,12 +18,13 @@ public class SimpleTimeColorAverager extends AbstractTimeColorAverager {
 	
 	public SimpleTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter, int readColorRefreshRate, int outColorRefreshRate, int channelNo) {
 		super(reader, outputAdapter,readColorRefreshRate, outColorRefreshRate, channelNo);
-		this.currentRed = 0;
-		this.currentGreen = 0;
-		this.currentBlue = 0;
 		this.noOutRefreshes = (int) Math.floor((float)(readColorRefreshRate)/(float)(outColorRefreshRate));
 		this.outColorRefreshRate = outColorRefreshRate;
 		this.channelNo = channelNo;
+		Color futureColor = readOneFramesColor();
+		this.currentRed = futureColor.getRed();
+		this.currentGreen = futureColor.getGreen();
+		this.currentBlue = futureColor.getBlue();
 	}
 	
 	@Override
