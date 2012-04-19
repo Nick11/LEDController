@@ -2,16 +2,12 @@ package inputAdapters;
 
 import java.awt.Color;
 import java.util.NoSuchElementException;
-
 import outputAdapters.OutputAdapter;
-
 import colorAverager.AbstractTimeColorAverager;
-import colorAverager.SimpleTimeColorAverager;
+import colorAverager.WeightedTimeColorAverager;
 import colorReader.AbstractColorReader;
 import colorReader.SolidColorReader;
-
 import ui.MainWindow;
-
 import executor.Executor;
 import executor.RunningMode;
 
@@ -139,8 +135,8 @@ public class GUIAdapter extends Thread{
 	}
 	private void setRunningMode(){
 		//very important to modify the averager!
-		if(averager.getClass()==(SimpleTimeColorAverager.class)){
-			averager = new SimpleTimeColorAverager(reader, outputAdapter, readColorRefreshRate, outColorRefreshRate, channelNo);
+		if(averager.getClass()==(WeightedTimeColorAverager.class)){
+			averager = new WeightedTimeColorAverager(reader, outputAdapter, readColorRefreshRate, outColorRefreshRate, channelNo);
 		}
 		mode = new RunningMode(reader, outputAdapter,averager,
 				readColorRefreshRate, outColorRefreshRate, screenNo, isRunning, channelNo);

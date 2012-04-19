@@ -2,19 +2,13 @@ package executor;
 
 import java.awt.Color;
 import java.util.ArrayList;
-
-import outputAdapters.LEDOutputAdapter;
 import outputAdapters.OutputAdapter;
 import outputAdapters.PanelAndLEDOutputAdapter;
-import outputAdapters.PanelOutputAdapter;
-
 import colorAverager.AbstractTimeColorAverager;
-import colorAverager.ManualTimeColorAverager;
-import colorAverager.SimpleTimeColorAverager;
+import colorAverager.WeightedTimeColorAverager;
 import colorReader.AbstractColorReader;
-import colorReader.RandomColorReader;
+import colorReader.AreaPixelReader;
 import colorReader.SimplePixelReader;
-import colorReader.SolidColorReader;
 /**
  * Immutable data object. Changed by the UI and read by the <code>Executor</code>
  * This is introduced for synchronization purpose.
@@ -130,11 +124,11 @@ public class RunningMode {
 		
 		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
 		
-		int readColorRefreshRate = 20;
-		int outColorRefreshRate = 10;
+		int readColorRefreshRate = 50;
+		int outColorRefreshRate = 25;
 		int screenNr = 0;
 		AbstractColorReader colorReader = new  SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
-		AbstractTimeColorAverager averager = new SimpleTimeColorAverager(colorReader, adapter, readColorRefreshRate, outColorRefreshRate, channelNr);
+		AbstractTimeColorAverager averager = new WeightedTimeColorAverager(colorReader, adapter, readColorRefreshRate, outColorRefreshRate, channelNr);
 		return new RunningMode(colorReader, adapter,
 				averager,
 				readColorRefreshRate, outColorRefreshRate, screenNr, true, channelNr);
