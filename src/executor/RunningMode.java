@@ -124,8 +124,8 @@ public class RunningMode {
 		
 		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
 		
-		int readColorRefreshRate = 50;
-		int outColorRefreshRate = 25;
+		int readColorRefreshRate = 500;
+		int outColorRefreshRate = 250;
 		int screenNr = 0;
 		AbstractColorReader colorReader = new  SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
 		AbstractTimeColorAverager averager = new WeightedTimeColorAverager(colorReader, adapter, readColorRefreshRate, outColorRefreshRate, channelNr);

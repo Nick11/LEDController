@@ -23,6 +23,7 @@ public class SolidColorReader implements AbstractColorReader {
 	}
 	@Override
 	public Color getColor() {
+		assert(colors.length>0);
 		index= (index+1)%colors.length;
 		return colors[index];
 	}

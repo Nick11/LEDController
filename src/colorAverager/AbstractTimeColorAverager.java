@@ -28,6 +28,7 @@ public abstract class AbstractTimeColorAverager extends TimerTask{
 	 */
 	@Override
 	abstract public void run();
+	abstract public void endPeriod();
 	
 	public Color readOneFramesColor(){
 		assert(reader!=null);

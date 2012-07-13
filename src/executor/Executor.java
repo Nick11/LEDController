@@ -12,6 +12,7 @@ public class Executor extends Thread {
 	private volatile RunningMode desiredRunningMode;
 	private RunningMode currentRunningMode;
 	public final static int NOCHANNELS = 2;
+	private ScheduledFuture<?> timeHandle;
 	
 	public Executor(RunningMode runningMode){
 		this.currentRunningMode = runningMode;
@@ -28,6 +29,7 @@ public class Executor extends Thread {
 //				Thread.sleep(currentRunningMode.getReadColorRefreshRate());
 //			} catch(InterruptedException e) { }
 			// checking if another runningMode has been set
+			averager.endPeriod();
 			if( !currentRunningMode.equals(desiredRunningMode)){
 				currentRunningMode = desiredRunningMode;
 			}
