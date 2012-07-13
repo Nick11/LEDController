@@ -1,6 +1,9 @@
 package colorAverager;
 
 import java.awt.Color;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import outputAdapters.OutputAdapter;
 import colorReader.AbstractColorReader;
@@ -8,6 +11,7 @@ import colorReader.AbstractColorReader;
 public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 	
 	private float futureRed, futureGreen, futureBlue, currentRed, currentGreen, currentBlue;
+	private float stepRed, stepGreen, stepBlue;
 	/**
 	 * see <code>RunningMode</code> for details concerning the following fields.
 	 */
@@ -26,18 +30,38 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 		this.currentGreen = futureColor.getGreen();
 		this.currentBlue = futureColor.getBlue();
 	}
-	
-	@Override
-	public void run() {
+	public void startPeriod(){
+		
+//        assert Math.round(currentRed) == futureRed;
+//        assert Math.round(currentGreen) == futureGreen;
+//        assert Math.round(currentBlue) == futureBlue;
+		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+		scheduler.scheduleAtFixedRate(new Runner(), 0, outColorRefreshRate, TimeUnit.MILLISECONDS); 
+		
+        System.out.println("YuhuAv");
+        currentRed = Math.round(currentRed);
+        currentGreen = Math.round(currentGreen);
+        currentBlue = Math.round(currentBlue); 
+        
 		Color futureColor = readOneFramesColor();
 		
 		futureRed = futureColor.getRed();
         futureGreen = futureColor.getGreen();
         futureBlue = futureColor.getBlue();
 
-        float stepRed = (futureRed - currentRed) / noOutRefreshes;
-        float stepGreen = (futureGreen - currentGreen) / noOutRefreshes;
-        float stepBlue = (futureBlue - currentBlue) / noOutRefreshes;
+        stepRed = (futureRed - currentRed) / noOutRefreshes;
+        stepGreen = (futureGreen - currentGreen) / noOutRefreshes;
+        stepBlue = (futureBlue - currentBlue) / noOutRefreshes;
+	}
+	@Override
+	public void run() {
+		
+		startPeriod();
+	}
+	private class Runner extends Thread{
+		
+		public void run(){
+        
         for (int i = 0; i < noOutRefreshes; i++)
         {
             currentRed += stepRed;
@@ -50,12 +74,8 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
                 Thread.sleep(outColorRefreshRate);
             }catch (InterruptedException ex){}
         }
-        assert Math.round(currentRed) == futureRed;
-        assert Math.round(currentGreen) == futureGreen;
-        assert Math.round(currentBlue) == futureBlue;
-        currentRed = Math.round(currentRed);
-        currentGreen = Math.round(currentGreen);
-        currentBlue = Math.round(currentBlue); 
+
+	}
 	}
 
 	private int weight(float color,  float factor) {

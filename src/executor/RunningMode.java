@@ -71,7 +71,7 @@ public class RunningMode {
     public RunningMode(AbstractColorReader currentColorReader,OutputAdapter currentOutputAdapter,
 				AbstractTimeColorAverager currentColorAverager,
 				int readColorRefreshRate, int outColorRefreshRate, int screenNr, boolean isRunning, int channelNo) {
-    	if(readColorRefreshRate<outColorRefreshRate){
+    	if(readColorRefreshRate<outColorRefreshRate || outColorRefreshRate <= 0){
     		throw(new IllegalArgumentException("readColorRefreshRatemust be larger than outColorRefreshRate.")); //not good to
     		//throw exceptions in the constructor. but this criteria is crucial.
     	}
