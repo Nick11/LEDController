@@ -6,6 +6,7 @@ import outputAdapters.OutputAdapter;
 import colorAverager.AbstractTimeColorAverager;
 import colorAverager.WeightedTimeColorAverager;
 import colorReader.AbstractColorReader;
+import colorReader.SimplePixelReader;
 import colorReader.SolidColorReader;
 import ui.MainWindow;
 import executor.Executor;
@@ -45,8 +46,8 @@ public class GUIAdapter extends Thread{
 	/**
 	 * default values for the refresh rates. in ms
 	 */
-	private final int SLOW = 1500;
-	private final int FAST = 10;
+	private final int SLOW = 500;
+	private final int FAST = 25;
 	
 	private GUIAdapter(RunningMode mode, Executor[] executors){
 		super();
@@ -120,6 +121,15 @@ public class GUIAdapter extends Thread{
 		reader = new SolidColorReader(colorArray);
 		readColorRefreshRate=SLOW;
 		channelNo = id;
+		setRunningMode();
+	}
+	/**
+	 * signals the <code>executor</code> to switch to auto-mode
+	 */
+	public void setAutoMode(){
+		updateParameters(mode);
+		reader = new SimplePixelReader(0);
+		readColorRefreshRate=FAST;
 		setRunningMode();
 	}
 	

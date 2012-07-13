@@ -59,7 +59,7 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 	}
 
 	private int weight(float color,  float factor) {
-		int weighted = Math.round(((color/255)*(color/255)*factor*2.5f)*255);
+		int weighted = Math.round(((color/255)*(color/255)*factor*8f)*color);
 				if(weighted >255)
 					weighted = 255;
 		return weighted;

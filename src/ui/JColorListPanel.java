@@ -77,11 +77,12 @@ public class JColorListPanel extends JPanel{
 	private JPanel getJButtonPanel(){
 		if(jButtonPanel==null){
 			jButtonPanel = new JPanel();
-			jButtonPanel.setLayout(new GridLayout(4,1));
+			jButtonPanel.setLayout(new GridLayout(5,1));
 			JSmallButton addButton = new JSmallButton(">");
 			JSmallButton removeButton = new JSmallButton("x");
 			JSmallButton setButton = new JSmallButton("set");
 			JSmallButton playButton = new JSmallButton("play");
+			JSmallButton autoButton = new JSmallButton("auto");
 			addButton.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -106,10 +107,17 @@ public class JColorListPanel extends JPanel{
 					playAllColors();
 				}
 			});
+			autoButton.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setAutoMode();
+				}
+			});
 			jButtonPanel.add(addButton);
 			jButtonPanel.add(removeButton);
 			jButtonPanel.add(setButton);
 			jButtonPanel.add(playButton);
+			jButtonPanel.add(autoButton);
 		}
 		return jButtonPanel;
 	}
@@ -146,6 +154,9 @@ public class JColorListPanel extends JPanel{
 			}
 		}
 	}
+	/**
+	 * playes the color in the list
+	 */
 	private void playAllColors() {
 		DefaultListModel model = (DefaultListModel) getJColorList().getModel();
 		int[][] colors = new int[model.size()][3];
@@ -165,11 +176,23 @@ public class JColorListPanel extends JPanel{
 			GUIAdapter.getInstance().setColorSequence(colors,ID);
 		}catch(NoSuchElementException e){e.printStackTrace(System.out); }
 	}
-
+	/**
+	 * sets one single color
+	 */
 	private void setColor() {
 		int[] color = updater.getCurrentColor();
 		try{
 			GUIAdapter.getInstance().setSingleColor(color[0], color[1], color[2],ID);
+		}catch(NoSuchElementException e){
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * activates the auto-mode
+	 */
+	private void setAutoMode(){
+		try{
+			GUIAdapter.getInstance().setAutoMode();
 		}catch(NoSuchElementException e){
 			e.printStackTrace();
 		}
