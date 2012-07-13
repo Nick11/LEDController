@@ -33,6 +33,7 @@ public class MainWindow extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setTitle("LEDController");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setJMenuBar(new JMainWindowMenuBar());
 	}
 
 	private JPanel getJContentPane() {
