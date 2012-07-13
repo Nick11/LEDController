@@ -38,7 +38,6 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(new Runner(), 0, outColorRefreshRate, TimeUnit.MILLISECONDS); 
 		
-        System.out.println("YuhuAv");
         currentRed = Math.round(currentRed);
         currentGreen = Math.round(currentGreen);
         currentBlue = Math.round(currentBlue); 
