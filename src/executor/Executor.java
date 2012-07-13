@@ -6,6 +6,7 @@ import colorAverager.AbstractTimeColorAverager;
 public class Executor extends Thread {
 	private volatile RunningMode desiredRunningMode;
 	private RunningMode currentRunningMode;
+	public final static int NOCHANNELS = 2;
 	
 	public Executor(RunningMode runningMode){
 		this.currentRunningMode = runningMode;
@@ -43,7 +44,7 @@ public class Executor extends Thread {
 		RunningMode runningMode2 = RunningMode.getDefault(1);
 		Executor executor1= new Executor(runningMode1);
 		Executor executor2= new Executor(runningMode2);
-		GUIAdapter adapter = GUIAdapter.getInstance(runningMode1, new Executor[]{executor1, executor2});
+		GUIAdapter adapter = GUIAdapter.getInstance(new RunningMode[]{runningMode1, runningMode2}, new Executor[]{executor1, executor2});
 		adapter.start();
 		runningMode2.getOutputAdapter().startTransmission();
     	executor1.start();
@@ -51,6 +52,9 @@ public class Executor extends Thread {
 	}
 	public synchronized void setDesiredRunningMode(RunningMode desiredRunningMode){
 		this.desiredRunningMode = desiredRunningMode;
+	}
+	public RunningMode getCurrentRunningMode(){
+		return this.currentRunningMode;
 	}
 
 }

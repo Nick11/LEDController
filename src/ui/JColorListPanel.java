@@ -192,7 +192,7 @@ public class JColorListPanel extends JPanel{
 	 */
 	private void setAutoMode(){
 		try{
-			GUIAdapter.getInstance().setAutoMode();
+			GUIAdapter.getInstance().setAutoMode(ID);
 		}catch(NoSuchElementException e){
 			e.printStackTrace();
 		}

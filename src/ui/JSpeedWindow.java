@@ -15,9 +15,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import executor.Executor;
+
 public class JSpeedWindow extends JFrame {
 	
 	private JPanel jContentPane = null;
+	private JTextField[] jReadColorRefreshRateTextFields = null;
+	private JTextField[] jOutColorRefreshRateTextFields = null;
 	
 	public JSpeedWindow(){
 		super();
@@ -27,7 +31,7 @@ public class JSpeedWindow extends JFrame {
 	public void initialize(){
 		this.setEnabled(true);
 		this.setVisible(true);
-		this.setSize(100,150);
+		this.setSize(250,150);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Set Speed");
 	}
@@ -35,11 +39,10 @@ public class JSpeedWindow extends JFrame {
 	private Container getJContentPane() {
 		if(jContentPane == null){
 			jContentPane = new JPanel();
-			LayoutManager layout = new GridLayout(3,2);
+			LayoutManager layout = new GridLayout(4,1+Executor.NOCHANNELS);
 			jContentPane.setLayout(layout);
 			
-			JTextField jLEDTimeTextField = new JTextField();
-			JTextField jReadTimeTextField = new JTextField();
+			
 			JButton jSaveButton = new JButton("save");
 			jSaveButton.addActionListener(new ActionListener(){
 				@Override
@@ -56,31 +59,76 @@ public class JSpeedWindow extends JFrame {
 				}
 			});
 			loadValues();
-			jContentPane.add(new JLabel("readTime"),0);
-			jContentPane.add(jReadTimeTextField,1);
-			jContentPane.add(new JLabel("LEDTime"),2);
-			jContentPane.add(jLEDTimeTextField,3);
+			jContentPane.add(new JLabel("Description"));
+			for(int i=0; i< Executor.NOCHANNELS; i++){
+				jContentPane.add(new JLabel("Channel "+i));
+			}
+			jContentPane.add(new JLabel("readTime"));
+			for(int i=0; i< Executor.NOCHANNELS; i++){
+				jContentPane.add(getJReadColorRefreshRateTextFields()[i]);
+			}
+			jContentPane.add(new JLabel("LEDTime"));
+			for(int i=0; i< Executor.NOCHANNELS; i++){
+				jContentPane.add(getJOutColorRefreshRateTextFields()[i]);
+			}
 			jContentPane.add(jCancelButton);
 			jContentPane.add(jSaveButton);
 		}
 		return jContentPane;
 	}
+
+	private JTextField[] getJReadColorRefreshRateTextFields() {
+		if(jReadColorRefreshRateTextFields == null){
+			jReadColorRefreshRateTextFields = new JTextField[Executor.NOCHANNELS];
+			for(int i=0; i<Executor.NOCHANNELS; i++){
+				jReadColorRefreshRateTextFields[i] = new JTextField();
+			}
+		}
+		return jReadColorRefreshRateTextFields;
+	}
+	
+	private JTextField[] getJOutColorRefreshRateTextFields() {
+		if(jOutColorRefreshRateTextFields == null){
+			jOutColorRefreshRateTextFields = new JTextField[Executor.NOCHANNELS];
+			for(int i=0; i<Executor.NOCHANNELS; i++){
+				jOutColorRefreshRateTextFields[i] = new JTextField();
+			}
+		}
+		return jOutColorRefreshRateTextFields;
+	}
 	
 	private void loadValues() {
-		int readTime = 0;
-		int lEDTime = 0;
+		int[] readTime = new int[]{};
+		int[] lEDTime = new int[]{};
 		try{
 			readTime = GUIAdapter.getInstance().getReadColorRefreshRate();
-			lEDTime = GUIAdapter.getInstance().getReadColorRefreshRate();
+			lEDTime = GUIAdapter.getInstance().getOutColorRefreshRate();
 		}catch(NoSuchElementException e){
 			e.printStackTrace();
 		}
-		
+		for(int i=0; i<Executor.NOCHANNELS; i++){
+			getJReadColorRefreshRateTextFields()[i].setText(readTime[i]+"");
+			getJOutColorRefreshRateTextFields()[i].setText(lEDTime[i]+"");
+		}
 	}
 
 	private void saveValues() {
-		// TODO Auto-generated method stub
-		
+		int[] readTime = new int[Executor.NOCHANNELS];
+		int[] lEDTime = new int[Executor.NOCHANNELS];
+		try{
+			for(int i=0; i<Executor.NOCHANNELS; i++){
+				readTime[i] = Integer.valueOf(getJReadColorRefreshRateTextFields()[i].getText());
+				lEDTime[i] = Integer.valueOf(getJOutColorRefreshRateTextFields()[i].getText());
+			}
+		}catch(NumberFormatException e) {e.printStackTrace();}
+		try{
+			for(int i=0; i<Executor.NOCHANNELS; i++){
+				GUIAdapter.getInstance().setReadColorRefreshRate(readTime[i], i);
+				GUIAdapter.getInstance().setOutColorRefreshRate(lEDTime[i], i);
+			}
+		}catch(NoSuchElementException e){
+			e.printStackTrace();
+		}
 	}
 	
 	private void close(){

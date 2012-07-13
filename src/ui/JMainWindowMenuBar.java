@@ -11,7 +11,7 @@ import javax.swing.JMenuItem;
 public class JMainWindowMenuBar extends JMenuBar {
 
 	private JMenu jSettingsMenu = null;
-
+	private JMenuItem jDebuggingWindowMenuItem = null;
 	
 	public JMainWindowMenuBar(){
 		super();
@@ -21,8 +21,11 @@ public class JMainWindowMenuBar extends JMenuBar {
 	private void initialize() {
 		
 		this.add(getJSettingsMenu());
+		this.add(getJDebuggingWindowMenuItem());
 		
 	}
+
+
 
 	private JMenu getJSettingsMenu() {
 		if(jSettingsMenu == null){
@@ -36,7 +39,19 @@ public class JMainWindowMenuBar extends JMenuBar {
 			});
 			jSettingsMenu.add(jSpeedMenuItem);
 		}
-		
 		return jSettingsMenu;
+	}
+	
+	private JMenuItem getJDebuggingWindowMenuItem() {
+		if(jDebuggingWindowMenuItem==null){
+			jDebuggingWindowMenuItem = new JMenuItem("Debugging");
+			jDebuggingWindowMenuItem.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					new JDebuggingWindow();
+				}
+			});
+		}
+		return jDebuggingWindowMenuItem;
 	}
 }
