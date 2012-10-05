@@ -119,14 +119,14 @@ public class RunningMode {
 		
 		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
 		
-		int periodsBetweenReading = 20;
-		int outColorRefreshRate = 20;
+		int noOutRefreshes = 1;
+		int outColorRefreshRate = 50;
 		int screenNr = 0;
-		AbstractColorReader colorReader = new  SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
-		AbstractTimeColorAverager averager = new WeightedTimeColorAverager(colorReader, adapter, periodsBetweenReading, channelNr);
+		AbstractColorReader colorReader = new  AreaPixelReader(screenNr); //SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
+		AbstractTimeColorAverager averager = new WeightedTimeColorAverager(colorReader, adapter, noOutRefreshes, channelNr);
 		return new RunningMode(colorReader, adapter,
 				averager,
-				periodsBetweenReading, outColorRefreshRate, screenNr, true, channelNr);
+				noOutRefreshes, outColorRefreshRate, screenNr, true, channelNr);
 	}
     
 }

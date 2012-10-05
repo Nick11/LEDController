@@ -124,7 +124,7 @@ public class GUIAdapter extends Thread{
 	public void setAutoMode(int id){
 		updateParameters(modes[id]);
 		reader = new SimplePixelReader(0);
-		//readColorRefreshRate=FAST;
+		channelNo = id;
 		setRunningMode();
 	}
 	public void setPeriodsBetweenReading(int periods, int id){
@@ -154,7 +154,7 @@ public class GUIAdapter extends Thread{
 	private void setRunningMode(){
 		//very important to modify the averager!
 		if(averager.getClass()==(WeightedTimeColorAverager.class)){
-			averager = new WeightedTimeColorAverager(reader, outputAdapter, outColorRefreshRate, channelNo);
+			averager = new WeightedTimeColorAverager(reader, outputAdapter, periodsBetweenReading, channelNo);
 		}
 		modes[channelNo] = new RunningMode(reader, outputAdapter,averager,
 				periodsBetweenReading, outColorRefreshRate, screenNo, isRunning, channelNo);

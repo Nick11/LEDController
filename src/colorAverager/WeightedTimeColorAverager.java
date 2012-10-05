@@ -16,16 +16,16 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 	/**
 	 * see <code>RunningMode</code> for details concerning the following fields.
 	 */
-	private int noOutRefreshes;
+	private int periodsBetweenReading;
 	private Color outColor;
 	private int channelNo;
 	private int outCounter;
 	
-	public WeightedTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter, int noOutRefreshes, int channelNo) {
-		super(reader, outputAdapter, noOutRefreshes, channelNo);
+	public WeightedTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter, int periodsBetweenReading, int channelNo) {
+		super(reader, outputAdapter, periodsBetweenReading, channelNo);
 		this.channelNo = channelNo;
 		this.outCounter = 0;
-		this.noOutRefreshes = noOutRefreshes;
+		this.periodsBetweenReading = periodsBetweenReading;
 		Color futureColor = readOneFramesColor();
 		this.nextRed = futureColor.getRed();
 		this.nextGreen = futureColor.getGreen();
@@ -41,10 +41,10 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 		if(outCounter==0){
 			endPeriod();
 		}
-		outCounter=(outCounter+1)%noOutRefreshes ;
+		outCounter=(outCounter+1)%periodsBetweenReading ;
 	}
 	private void outputColor(){
-		outColor = new Color(weight(nextRed,1), weight(nextGreen,1.3f), weight(nextBlue,0.5f));
+		outColor = weight(nextRed, nextGreen, nextBlue);
 		setColor(outColor, channelNo);
 	}
 	private void calculateNextColor(){
@@ -66,16 +66,31 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
         futureGreen = futureColor.getGreen();
         futureBlue = futureColor.getBlue();
         
-        stepRed = (futureRed - nextRed) / noOutRefreshes;
-        stepGreen = (futureGreen - nextGreen) / noOutRefreshes;
-        stepBlue = (futureBlue - nextBlue) / noOutRefreshes;
+        stepRed = (futureRed - nextRed) / periodsBetweenReading;
+        stepGreen = (futureGreen - nextGreen) / periodsBetweenReading;
+        stepBlue = (futureBlue - nextBlue) / periodsBetweenReading;
 	}
 
-	private int weight(float color,  float factor) {
-		int weighted = Math.round(((color/255)*(color/255)*factor*8f)*color);
-				if(weighted >255)
-					weighted = 255;
-		return (int)color;// weighted;
+	private Color weight(float red, float green, float blue) {
+		
+		double redNorm = red/255d;
+		double greenNorm = green/255d;
+		double blueNorm = blue/255d;
+		double average = (redNorm+greenNorm+blueNorm)/3;
+		double b = 0.9;
+		double a2 = -(b/average)-(b/(average-1));
+		double a1 = 1-a2;
+		
+		double redWeight = a1*redNorm+a2*redNorm*redNorm;
+		double greenWeight = a1*greenNorm+a2*greenNorm*greenNorm;
+		double blueWeight = a1*blueNorm+a2*blueNorm*blueNorm;
+		
+		int redRounded = (int) (redWeight*255>255? 255 : redWeight*255);
+		int greenRounded = (int) (greenWeight*255>255? 255 : greenWeight*255);
+		int blueRounded = (int) (blueWeight*255>255? 255 : blueWeight*255);
+				
+		
+		return new Color(redRounded, greenRounded, blueRounded);
 	}
 
 
