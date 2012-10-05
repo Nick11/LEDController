@@ -13,12 +13,12 @@ import colorReader.SimplePixelReader;
  * @author Niclas
  *
  */
-public abstract class AbstractTimeColorAverager extends TimerTask{
+public abstract class AbstractTimeColorAverager{
 	private AbstractColorReader reader;
 	private OutputAdapter outputAdapter;
 	private int channelNo;
 
-	public AbstractTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter, int readColorRefreshRate, int outColorRefreshRate, int channelNo){
+	public AbstractTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter,int noOutRefreshes, int channelNo){
 		this.reader=reader;
 		this.outputAdapter = outputAdapter;
 		this.channelNo= channelNo;
@@ -26,9 +26,7 @@ public abstract class AbstractTimeColorAverager extends TimerTask{
 	/**
 	 * starts reading and averaging the colors. Writes them to a <code>OutputAdapter</code>.
 	 */
-	@Override
-	abstract public void run();
-	abstract public void endPeriod();
+	abstract public void doNext();
 	
 	public Color readOneFramesColor(){
 		assert(reader!=null);

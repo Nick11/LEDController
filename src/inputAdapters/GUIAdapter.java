@@ -38,16 +38,11 @@ public class GUIAdapter extends Thread{
 	private AbstractColorReader reader;
 	private OutputAdapter outputAdapter;
 	private AbstractTimeColorAverager averager ;
-	private int readColorRefreshRate;
+	private int periodsBetweenReading;
 	private int outColorRefreshRate;
 	private int screenNo;
 	private boolean isRunning;
 	private int channelNo;
-	/**
-	 * default values for the refresh rates. in ms
-	 */
-	private final int SLOW = 500;
-	private final int FAST = 25;
 	
 	private GUIAdapter(RunningMode[] modes, Executor[] executors){
 		super();
@@ -132,16 +127,16 @@ public class GUIAdapter extends Thread{
 		//readColorRefreshRate=FAST;
 		setRunningMode();
 	}
-	public void setReadColorRefreshRate(int rate, int id){
+	public void setPeriodsBetweenReading(int periods, int id){
 		updateParameters(modes[id]);
-		this.readColorRefreshRate = rate;
+		this.periodsBetweenReading = periods;
 		channelNo = id;
 		setRunningMode();
 	}
 	
-	public void setOutColorRefreshRate(int rate, int id){
+	public void setOutColorRefreshRate(int outColorRefreshRate, int id){
 		updateParameters(modes[id]);
-		this.outColorRefreshRate = rate;
+		this.outColorRefreshRate = outColorRefreshRate;
 		channelNo = id;
 		setRunningMode();
 	}
@@ -152,17 +147,17 @@ public class GUIAdapter extends Thread{
 		this.reader = mode.getColorReader();
 		this.isRunning = mode.isRunning();
 		this.outColorRefreshRate = mode.getOutColorRefreshRate();
-		this.readColorRefreshRate = mode.getReadColorRefreshRate();
+		this.periodsBetweenReading = mode.getPeriodsBetweenReading();
 		this.screenNo = mode.getScreenNr();
 		this.channelNo = mode.getChannelNo();
 	}
 	private void setRunningMode(){
 		//very important to modify the averager!
 		if(averager.getClass()==(WeightedTimeColorAverager.class)){
-			averager = new WeightedTimeColorAverager(reader, outputAdapter, readColorRefreshRate, outColorRefreshRate, channelNo);
+			averager = new WeightedTimeColorAverager(reader, outputAdapter, outColorRefreshRate, channelNo);
 		}
 		modes[channelNo] = new RunningMode(reader, outputAdapter,averager,
-				readColorRefreshRate, outColorRefreshRate, screenNo, isRunning, channelNo);
+				periodsBetweenReading, outColorRefreshRate, screenNo, isRunning, channelNo);
 		executors[channelNo].setDesiredRunningMode(modes[channelNo]);
 	}
 	
@@ -196,24 +191,24 @@ public class GUIAdapter extends Thread{
 	}
 	
 	
-	public int[] getReadColorRefreshRate(){
-		int[] readColorRefreshRates= new int[Executor.NOCHANNELS];
+	public int[] getPeriodsBetweenReading(){
+		int[] periodsBetweenReadings= new int[Executor.NOCHANNELS];
 		RunningMode runningMode;
 		for(int i=0; i<Executor.NOCHANNELS; i++){
 			runningMode = executors[i].getCurrentRunningMode();
-			readColorRefreshRates[i] = runningMode.getReadColorRefreshRate();
+			periodsBetweenReadings[i] = runningMode.getPeriodsBetweenReading();
 		}
-		return readColorRefreshRates;
+		return periodsBetweenReadings;
 	}
 	
 	public int[] getOutColorRefreshRate(){
-		int[] readColorRefreshRates= new int[Executor.NOCHANNELS];
+		int[] outColorRefreshRates= new int[Executor.NOCHANNELS];
 		RunningMode runningMode;
 		for(int i=0; i<Executor.NOCHANNELS; i++){
 			runningMode = executors[i].getCurrentRunningMode();
-			readColorRefreshRates[i] = runningMode.getOutColorRefreshRate();
+			outColorRefreshRates[i] = runningMode.getOutColorRefreshRate();
 		}
-		return readColorRefreshRates;
+		return outColorRefreshRates;
 	}
 	public int[] getScreenNr(){
 		int[] screenNumber= new int[Executor.NOCHANNELS];

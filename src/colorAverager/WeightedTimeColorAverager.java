@@ -11,81 +11,64 @@ import colorReader.AbstractColorReader;
 
 public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 	
-	private float futureRed, futureGreen, futureBlue, currentRed, currentGreen, currentBlue;
+	private float futureRed, futureGreen, futureBlue, nextRed, nextGreen, nextBlue;
 	private float stepRed, stepGreen, stepBlue;
 	/**
 	 * see <code>RunningMode</code> for details concerning the following fields.
 	 */
 	private int noOutRefreshes;
 	private Color outColor;
-	private int outColorRefreshRate;
-	private int readColorRefreshRate;
 	private int channelNo;
+	private int outCounter;
 	
-	public WeightedTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter, int readColorRefreshRate, int outColorRefreshRate, int channelNo) {
-		super(reader, outputAdapter,readColorRefreshRate, outColorRefreshRate, channelNo);
-		this.noOutRefreshes = (int) Math.floor((float)(readColorRefreshRate)/(float)(outColorRefreshRate));
-		this.outColorRefreshRate = outColorRefreshRate;
-		this.readColorRefreshRate = readColorRefreshRate;
+	public WeightedTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter, int noOutRefreshes, int channelNo) {
+		super(reader, outputAdapter, noOutRefreshes, channelNo);
 		this.channelNo = channelNo;
+		this.outCounter = 0;
+		this.noOutRefreshes = noOutRefreshes;
 		Color futureColor = readOneFramesColor();
-		this.currentRed = futureColor.getRed();
-		this.currentGreen = futureColor.getGreen();
-		this.currentBlue = futureColor.getBlue();
+		this.nextRed = futureColor.getRed();
+		this.nextGreen = futureColor.getGreen();
+		this.nextBlue = futureColor.getBlue();
+		this.stepRed = 0;
+		this.stepGreen = 0;
+		this.stepBlue = 0;
 	}
-	public void startPeriod(){
-       	Color futureColor = readOneFramesColor();
-		
-		futureRed = futureColor.getRed();
-        futureGreen = futureColor.getGreen();
-        futureBlue = futureColor.getBlue();
-
-        stepRed = (futureRed - currentRed) / noOutRefreshes;
-        stepGreen = (futureGreen - currentGreen) / noOutRefreshes;
-        stepBlue = (futureBlue - currentBlue) / noOutRefreshes;
-
-		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-		final ScheduledFuture<?> timeHandle = scheduler.scheduleAtFixedRate(new Runner(), 0, outColorRefreshRate, TimeUnit.MILLISECONDS);
-//		scheduler.schedule(new Runnable() {
-//			public void run() {
-//		        timeHandle.cancel(false);
-//		       
-//		      }
-//		    }, readColorRefreshRate, TimeUnit.MILLISECONDS);
-		
+	
+	public void doNext(){
+		outputColor();
+		calculateNextColor();
+		if(outCounter==0){
+			endPeriod();
+		}
+		outCounter=(outCounter+1)%noOutRefreshes ;
 	}
-	public void endPeriod(){
+	private void outputColor(){
+		outColor = new Color(weight(nextRed,1), weight(nextGreen,1.3f), weight(nextBlue,0.5f));
+		setColor(outColor, channelNo);
+	}
+	private void calculateNextColor(){
+		nextRed += stepRed;
+        nextGreen += stepGreen;
+        nextBlue += stepBlue;
+	}
+	protected void endPeriod(){
 //		assert (Math.round(currentRed) == futureRed);
 //		assert (Math.round(currentGreen) == futureGreen);
 //		assert (Math.round(currentBlue) == futureBlue);
-		currentRed = Math.round(currentRed);
-	    currentGreen = Math.round(currentGreen);
-	    currentBlue = Math.round(currentBlue); 
-	}
-	
-	@Override
-	public void run() {
 		
-		startPeriod();
-	}
-	private class Runner extends Thread{
-		
-		public void run(){
+		nextRed = Math.round(nextRed);
+	    nextGreen = Math.round(nextGreen);
+	    nextBlue = Math.round(nextBlue); 
+	    
+		Color futureColor = readOneFramesColor();
+		futureRed = futureColor.getRed();
+        futureGreen = futureColor.getGreen();
+        futureBlue = futureColor.getBlue();
         
-//        for (int i = 0; i < noOutRefreshes; i++)
-//        {
-            currentRed += stepRed;
-            currentGreen += stepGreen;
-            currentBlue += stepBlue;
-           
-            outColor = new Color(weight(currentRed,1), weight(currentGreen,1.3f), weight(currentBlue,0.5f));
-            setColor(outColor, channelNo);
-            try{
-                Thread.sleep(outColorRefreshRate);
-            }catch (InterruptedException ex){}
-        }
-
-//	}
+        stepRed = (futureRed - nextRed) / noOutRefreshes;
+        stepGreen = (futureGreen - nextGreen) / noOutRefreshes;
+        stepBlue = (futureBlue - nextBlue) / noOutRefreshes;
 	}
 
 	private int weight(float color,  float factor) {

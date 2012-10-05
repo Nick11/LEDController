@@ -12,7 +12,7 @@ public class Executor extends Thread {
 	private volatile RunningMode desiredRunningMode;
 	private RunningMode currentRunningMode;
 	public final static int NOCHANNELS = 2;
-	private ScheduledFuture<?> timeHandle;
+	private static ScheduledExecutorService scheduler;
 	
 	public Executor(RunningMode runningMode){
 		this.currentRunningMode = runningMode;
@@ -21,19 +21,13 @@ public class Executor extends Thread {
 	
 	@Override
 	public void run(){
+		// checking if another runningMode has been set
+		if( !currentRunningMode.equals(desiredRunningMode)){
+			currentRunningMode = desiredRunningMode;
+		}
 		AbstractTimeColorAverager averager;
-		//while(currentRunningMode.isRunning()){
-			averager = currentRunningMode.getColorAverager();
-			averager.run();
-//			try {
-//				Thread.sleep(currentRunningMode.getReadColorRefreshRate());
-//			} catch(InterruptedException e) { }
-			// checking if another runningMode has been set
-			averager.endPeriod();
-			if( !currentRunningMode.equals(desiredRunningMode)){
-				currentRunningMode = desiredRunningMode;
-			}
-		//}
+		averager = currentRunningMode.getColorAverager();
+		averager.doNext();
 	}
 	
 	private void setUp(){
@@ -64,9 +58,11 @@ public class Executor extends Thread {
 	
 	private static void startExecutor(Executor executor, RunningMode runningMode){
 		// Get the scheduler
-		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+		
+		scheduler = Executors.newSingleThreadScheduledExecutor();
 		// Get a handle, starting now
-		final ScheduledFuture<?> timeHandle = scheduler.scheduleAtFixedRate(executor, 0, runningMode.getReadColorRefreshRate(), TimeUnit.MILLISECONDS);    
+		final ScheduledFuture<?> timeHandle = scheduler.scheduleAtFixedRate(executor, 0, runningMode.getOutColorRefreshRate(), TimeUnit.MILLISECONDS);    
+		
 		// Schedule the event, and run
 //		scheduler.schedule(new Runnable() {
 //					public void run() {
@@ -76,8 +72,15 @@ public class Executor extends Thread {
 //				      }
 //				    }, runningMode.getReadColorRefreshRate(), TimeUnit.MILLISECONDS);
 	}
+	private void changeExecutor(){
+		scheduler.shutdownNow();
+		scheduler = Executors.newSingleThreadScheduledExecutor();
+		scheduler.scheduleAtFixedRate(this, 0, desiredRunningMode.getOutColorRefreshRate(), TimeUnit.MILLISECONDS);
+	}
+	
 	public synchronized void setDesiredRunningMode(RunningMode desiredRunningMode){
 		this.desiredRunningMode = desiredRunningMode;
+		this.changeExecutor();
 	}
 	public RunningMode getCurrentRunningMode(){
 		return this.currentRunningMode;

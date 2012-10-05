@@ -31,17 +31,16 @@ public class RunningMode {
      */
     private final AbstractTimeColorAverager colorAverager;
     /**
-     * in ms. How often should a new color be read and evaluated.
-     * if this is set low, the color doesn't change fast enough in fast scenes.
-     * if it is set to high the color might change hectically. 
-     * MUST be larger than <code>readColorRefreshRate</code>.
+     * How often should a new color be read and evaluated.
+     * if this is set high, the color doesn't change fast enough in fast scenes.
+     * if it is set to lof the color might change hectically. 
      */
-    private final int readColorRefreshRate;
+    private final int periodsBetweenReading;
     /**
-     * in ms. determines how often the LEDs color should be updated.
+     * in ms. determines how often the LEDs color should be updated per reading-period
      * if this is set to high, there might be performance issues, but no visible effects.
      * if this is set to low, the transition between different colors is not smooth anymore.
-     * MUST be smaller than <code>outColorRefreshRate</code>.
+     * MUST be 1 or bigger.
      */
     private final int outColorRefreshRate;
     /**
@@ -70,15 +69,11 @@ public class RunningMode {
      */
     public RunningMode(AbstractColorReader currentColorReader,OutputAdapter currentOutputAdapter,
 				AbstractTimeColorAverager currentColorAverager,
-				int readColorRefreshRate, int outColorRefreshRate, int screenNr, boolean isRunning, int channelNo) {
-    	if(readColorRefreshRate<outColorRefreshRate || outColorRefreshRate <= 0){
-    		throw(new IllegalArgumentException("readColorRefreshRatemust be larger than outColorRefreshRate.")); //not good to
-    		//throw exceptions in the constructor. but this criteria is crucial.
-    	}
+				int periodsBetweenReading, int outColorRefreshRate, int screenNr, boolean isRunning, int channelNo) {
 		this.colorReader = currentColorReader;
 		this.outputAdapter = currentOutputAdapter;
 		this.colorAverager = currentColorAverager;
-		this.readColorRefreshRate = readColorRefreshRate;
+		this.periodsBetweenReading = periodsBetweenReading;
 		this.outColorRefreshRate = outColorRefreshRate;
 		this.screenNo = screenNr;
 		this.isRunning = isRunning;
@@ -97,8 +92,8 @@ public class RunningMode {
 		return colorAverager;
 	}
 
-	public int getReadColorRefreshRate() {
-		return readColorRefreshRate;
+	public int getPeriodsBetweenReading() {
+		return periodsBetweenReading;
 	}
 
 	public int getOutColorRefreshRate() {
@@ -124,14 +119,14 @@ public class RunningMode {
 		
 		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
 		
-		int readColorRefreshRate = 500;
-		int outColorRefreshRate = 250;
+		int periodsBetweenReading = 20;
+		int outColorRefreshRate = 20;
 		int screenNr = 0;
 		AbstractColorReader colorReader = new  SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
-		AbstractTimeColorAverager averager = new WeightedTimeColorAverager(colorReader, adapter, readColorRefreshRate, outColorRefreshRate, channelNr);
+		AbstractTimeColorAverager averager = new WeightedTimeColorAverager(colorReader, adapter, periodsBetweenReading, channelNr);
 		return new RunningMode(colorReader, adapter,
 				averager,
-				readColorRefreshRate, outColorRefreshRate, screenNr, true, channelNr);
+				periodsBetweenReading, outColorRefreshRate, screenNr, true, channelNr);
 	}
     
 }

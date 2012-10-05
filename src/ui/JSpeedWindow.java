@@ -98,33 +98,33 @@ public class JSpeedWindow extends JFrame {
 	}
 	
 	private void loadValues() {
-		int[] readTime = new int[]{};
-		int[] lEDTime = new int[]{};
+		int[] periods = new int[]{};
+		int[] lEDRefreshRate = new int[]{};
 		try{
-			readTime = GUIAdapter.getInstance().getReadColorRefreshRate();
-			lEDTime = GUIAdapter.getInstance().getOutColorRefreshRate();
+			periods = GUIAdapter.getInstance().getPeriodsBetweenReading();
+			lEDRefreshRate = GUIAdapter.getInstance().getOutColorRefreshRate();
 		}catch(NoSuchElementException e){
 			e.printStackTrace();
 		}
 		for(int i=0; i<Executor.NOCHANNELS; i++){
-			getJReadColorRefreshRateTextFields()[i].setText(readTime[i]+"");
-			getJOutColorRefreshRateTextFields()[i].setText(lEDTime[i]+"");
+			getJReadColorRefreshRateTextFields()[i].setText(periods[i]+"");
+			getJOutColorRefreshRateTextFields()[i].setText(lEDRefreshRate[i]+"");
 		}
 	}
 
 	private void saveValues() {
-		int[] readTime = new int[Executor.NOCHANNELS];
-		int[] lEDTime = new int[Executor.NOCHANNELS];
+		int[] periods = new int[Executor.NOCHANNELS];
+		int[] lEDRefreshRate = new int[Executor.NOCHANNELS];
 		try{
 			for(int i=0; i<Executor.NOCHANNELS; i++){
-				readTime[i] = Integer.valueOf(getJReadColorRefreshRateTextFields()[i].getText());
-				lEDTime[i] = Integer.valueOf(getJOutColorRefreshRateTextFields()[i].getText());
+				periods[i] = Integer.valueOf(getJReadColorRefreshRateTextFields()[i].getText());
+				lEDRefreshRate[i] = Integer.valueOf(getJOutColorRefreshRateTextFields()[i].getText());
 			}
 		}catch(NumberFormatException e) {e.printStackTrace();}
 		try{
 			for(int i=0; i<Executor.NOCHANNELS; i++){
-				GUIAdapter.getInstance().setReadColorRefreshRate(readTime[i], i);
-				GUIAdapter.getInstance().setOutColorRefreshRate(lEDTime[i], i);
+				GUIAdapter.getInstance().setPeriodsBetweenReading(periods[i], i);
+				GUIAdapter.getInstance().setOutColorRefreshRate(lEDRefreshRate[i], i);
 			}
 		}catch(NoSuchElementException e){
 			e.printStackTrace();

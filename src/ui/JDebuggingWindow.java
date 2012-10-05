@@ -53,11 +53,11 @@ public class JDebuggingWindow extends JFrame {
 				for(int i=0; i<Executor.NOCHANNELS; i++){
 					jContentPane.add(new JLabel((""+adapter.getColorAverager()[i].getClass()).substring(20)));
 				}
-				jContentPane.add(new JLabel("ReadColorRate"));
+				jContentPane.add(new JLabel("Periods between Reading"));
 				for(int i=0; i<Executor.NOCHANNELS; i++){
-					jContentPane.add(new JLabel(""+adapter.getReadColorRefreshRate()[i]));
+					jContentPane.add(new JLabel(""+adapter.getPeriodsBetweenReading()[i]));
 				}
-				jContentPane.add(new JLabel("OutputColorRate"));
+				jContentPane.add(new JLabel("Out color refresh rate"));
 				for(int i=0; i<Executor.NOCHANNELS; i++){
 					jContentPane.add(new JLabel(""+adapter.getOutColorRefreshRate()[i]));
 				}
