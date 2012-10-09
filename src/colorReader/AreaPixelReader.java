@@ -63,10 +63,10 @@ public class AreaPixelReader implements AbstractColorReader{
 			this.screenHeight = displayMode.getHeight();
 			
 			//TODO: u.s. parameter sollten im constructor übergeben werden
-			this.cornerOfAreaX = 0;
+			this.cornerOfAreaX = 200;
 			this.cornerOfAreaY = 150;
-			this.areaSideX = 1919;
-			this.areaSideY = 0;
+			this.areaSideX = 400;
+			this.areaSideY = 400;
 			//testArea();
 	}
 	private void testArea() {

@@ -24,11 +24,11 @@ public class SimplePixelReader implements AbstractColorReader{
 	/**
 	 * the numer of pixels analysed on each Zeile
 	 */
-	private int noPixelsToAnalyseX = 100;
+	private int noPixelsToAnalyseX = 1920;
 	/**
 	 * the numer of pixels analysed on each Spalte
 	 */
-	private int noPixelsToAnalyseY = 100;
+	private int noPixelsToAnalyseY = 1080;
 	
 	public SimplePixelReader(int screenNr) {
 			GraphicsEnvironment graphicEnvironement = GraphicsEnvironment.getLocalGraphicsEnvironment();
