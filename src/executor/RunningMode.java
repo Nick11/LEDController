@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import outputAdapters.OutputAdapter;
 import outputAdapters.PanelAndLEDOutputAdapter;
 import colorAverager.AbstractTimeColorAverager;
+import colorAverager.SimpleTimeColorAverager;
 import colorAverager.WeightedTimeColorAverager;
 import colorReader.AbstractColorReader;
 import colorReader.AreaPixelReader;
@@ -118,12 +119,11 @@ public class RunningMode {
 	public static RunningMode getDefault(int channelNr) {
 		
 		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
-		
 		int noOutRefreshes = 1;
-		int outColorRefreshRate = 50;
+		int outColorRefreshRate = 10;
 		int screenNr = 0;
-		AbstractColorReader colorReader = new  AreaPixelReader(screenNr); //SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
-		AbstractTimeColorAverager averager = new WeightedTimeColorAverager(colorReader, adapter, noOutRefreshes, channelNr);
+		AbstractColorReader colorReader = new  SimplePixelReader(screenNr); //SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
+		AbstractTimeColorAverager averager = new SimpleTimeColorAverager(colorReader, adapter, noOutRefreshes, channelNr);
 		return new RunningMode(colorReader, adapter,
 				averager,
 				noOutRefreshes, outColorRefreshRate, screenNr, true, channelNr);

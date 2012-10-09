@@ -1,11 +1,6 @@
 package colorAverager;
 
 import java.awt.Color;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
 import outputAdapters.OutputAdapter;
 import colorReader.AbstractColorReader;
 
@@ -77,13 +72,18 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 		double greenNorm = green/255d;
 		double blueNorm = blue/255d;
 		double average = (redNorm+greenNorm+blueNorm)/3;
+		double max = Math.max(Math.max(redNorm,greenNorm), blueNorm);
 		double b = 0.9;
 		double a2 = -(b/average)-(b/(average-1));
 		double a1 = 1-a2;
-		
+		redNorm = redNorm/max;
+		greenNorm = greenNorm/max;
+		blueNorm = blueNorm / max;
+		double blueConstant = -0.2;
+		double blueFactor = 1;
 		double redWeight = a1*redNorm+a2*redNorm*redNorm;
 		double greenWeight = a1*greenNorm+a2*greenNorm*greenNorm;
-		double blueWeight = a1*blueNorm+a2*blueNorm*blueNorm;
+		double blueWeight = a1*blueNorm+a2*blueNorm*blueNorm*blueFactor+blueConstant;
 		
 		int redRounded = (int) (redWeight*255>255? 255 : redWeight*255);
 		int greenRounded = (int) (greenWeight*255>255? 255 : greenWeight*255);

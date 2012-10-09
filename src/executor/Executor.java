@@ -1,6 +1,7 @@
 package executor;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -22,13 +23,12 @@ public class Executor extends Thread {
 	
 	@Override
 	public void run(){
+		assert false;
 		// checking if another runningMode has been set
 		if( !currentRunningMode.equals(desiredRunningMode)){
 			currentRunningMode = desiredRunningMode;
 		}
-		AbstractTimeColorAverager averager;
-		averager = currentRunningMode.getColorAverager();
-		averager.doNext();
+		currentRunningMode.getColorAverager().doNext();
 	}
 	
 	private void setUp(){
@@ -53,18 +53,19 @@ public class Executor extends Thread {
 		executor1.startExecutor(runningMode1);
 		executor2.startExecutor(runningMode2);
 		
-		
 //    	executor1.start();
 //    	executor2.start();
 	}
 	
 	
 	private void startExecutor(RunningMode runningMode){
-		// Get the scheduler
-		
-		
 		// Get a handle, starting now
-		final ScheduledFuture<?> timeHandle = scheduler.scheduleAtFixedRate(this, 0, runningMode.getOutColorRefreshRate(), TimeUnit.MILLISECONDS);
+		try{
+			scheduler.scheduleAtFixedRate(this, 0, runningMode.getOutColorRefreshRate(), TimeUnit.MILLISECONDS);
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("Exeception in Executor");
+		}
 		// Schedule the event, and run
 //		scheduler.schedule(new Runnable() {
 //					public void run() {
