@@ -2,6 +2,7 @@ package executor;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import inputAdapters.GUIAdapter;
 
@@ -11,6 +12,8 @@ public class Executor extends Thread {
 	public final static int NOCHANNELS = 2;
 	private ScheduledExecutorService scheduler;
 	
+	ScheduledFuture future = null;
+	
 	public Executor(RunningMode runningMode){
 		this.currentRunningMode = runningMode;
 		this.desiredRunningMode = runningMode;
@@ -19,7 +22,6 @@ public class Executor extends Thread {
 	
 	@Override
 	public void run(){
-		System.out.println("executor");
 		// checking if another runningMode has been set
 		if( !currentRunningMode.equals(desiredRunningMode)){
 			currentRunningMode = desiredRunningMode;
@@ -44,24 +46,22 @@ public class Executor extends Thread {
 		Executor executor2= new Executor(runningMode2);
 		GUIAdapter adapter = GUIAdapter.getInstance(new RunningMode[]{runningMode1, runningMode2}, new Executor[]{executor1, executor2});
 		adapter.start();
-		runningMode1.getOutputAdapter().startTransmission();
-		//initializeSchedulers();
+		runningMode2.getOutputAdapter().startTransmission();
 		executor1.startExecutor(runningMode1);
 		executor2.startExecutor(runningMode2);
-		
-//    	executor1.start();
-//    	executor2.start();
 	}
 	
 	
 	private void startExecutor(RunningMode runningMode){
 		// Get a handle, starting now
+		
 		try{
-			scheduler.scheduleAtFixedRate(this, 0, runningMode.getOutColorRefreshRate(), TimeUnit.MILLISECONDS);
+			 future = scheduler.scheduleAtFixedRate(this, 0, runningMode.getOutColorRefreshRate(), TimeUnit.MILLISECONDS);
 		} catch(Exception e){
 			e.printStackTrace();
 			System.out.println("Exeception in Executor");
 		}
+		
 		// Schedule the event, and run
 //		scheduler.schedule(new Runnable() {
 //					public void run() {
@@ -74,7 +74,7 @@ public class Executor extends Thread {
 	private void changeExecutor(){
 		this.scheduler.shutdownNow();
 		this.scheduler = Executors.newSingleThreadScheduledExecutor();
-		this.scheduler.scheduleAtFixedRate(this, 0, desiredRunningMode.getOutColorRefreshRate(), TimeUnit.MILLISECONDS);
+		this.scheduler.scheduleAtFixedRate(this, 5, desiredRunningMode.getOutColorRefreshRate(), TimeUnit.MILLISECONDS);
 	}
 	
 	public synchronized void setDesiredRunningMode(RunningMode desiredRunningMode){

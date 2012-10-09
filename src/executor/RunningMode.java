@@ -123,8 +123,8 @@ public class RunningMode {
 		int noOutRefreshes = 1;
 		int outColorRefreshRate = 100;
 		int screenNr = 0;
-		AbstractColorReader colorReader = new  SolidColorReader(new Color(255,0,200));  //AreaPixelReader(screenNr); //SimplePixelReader(screenNr);//RandomColorReader();
-		AbstractTimeColorAverager averager = new SimpleTimeColorAverager(colorReader, adapter, noOutRefreshes, channelNr);
+		AbstractColorReader colorReader = new SimplePixelReader(screenNr);// SolidColorReader(new Color(255,0,200));  //AreaPixelReader(screenNr); ////RandomColorReader();
+		AbstractTimeColorAverager averager = new WeightedTimeColorAverager(colorReader, adapter, noOutRefreshes, channelNr);
 		return new RunningMode(colorReader, adapter,
 				averager,
 				noOutRefreshes, outColorRefreshRate, screenNr, true, channelNr);

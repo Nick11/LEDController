@@ -79,11 +79,11 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 		redNorm = redNorm/max;
 		greenNorm = greenNorm/max;
 		blueNorm = blueNorm / max;
-		double blueConstant = -0.2;
-		double blueFactor = 1;
-		double redWeight = a1*redNorm+a2*redNorm*redNorm;
-		double greenWeight = a1*greenNorm+a2*greenNorm*greenNorm;
-		double blueWeight = a1*blueNorm+a2*blueNorm*blueNorm*blueFactor+blueConstant;
+		double blueConstant = -0;
+		double blueFactor = 0.5;
+		double redWeight = redNorm; //a1*redNorm+a2*redNorm*redNorm;
+		double greenWeight = greenNorm;//a1*greenNorm+a2*greenNorm*greenNorm;
+		double blueWeight = blueNorm;//a1*blueNorm+a2*blueNorm*blueNorm*blueFactor+blueConstant;
 		
 		int redRounded = (int) (redWeight*255>255? 255 : redWeight*255);
 		int greenRounded = (int) (greenWeight*255>255? 255 : greenWeight*255);

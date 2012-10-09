@@ -3,6 +3,7 @@ package outputAdapters;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -35,6 +36,7 @@ public class PanelOutputAdapter implements OutputAdapter{
 	
 	private void initPanel() {
 		JFrame frame = new JFrame();
+		frame.setLocation(new Point(500,-250));
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(2,1));
         panels = new JPanel[2];

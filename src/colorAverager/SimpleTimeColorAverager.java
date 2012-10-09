@@ -6,8 +6,8 @@ import colorReader.AbstractColorReader;
 
 public class SimpleTimeColorAverager extends AbstractTimeColorAverager {
 	
-	private float futureRed, futureGreen, futureBlue, nextRed, nextGreen, nextBlue;
-	private float stepRed, stepGreen, stepBlue;
+	private int futureRed, futureGreen, futureBlue, nextRed, nextGreen, nextBlue;
+	private int stepRed, stepGreen, stepBlue;
 	/**
 	 * see <code>RunningMode</code> for details concerning the following fields.
 	 */
@@ -39,7 +39,13 @@ public class SimpleTimeColorAverager extends AbstractTimeColorAverager {
 		outCounter=(outCounter+1)%periodsBetweenReading ;
 	}
 	private void outputColor(){
-		outColor = new Color(nextRed, nextGreen, nextBlue);
+		assert(nextRed>=0 && nextGreen>=0 && nextBlue>= 0);
+		assert(nextRed<=255 && nextGreen<=255 && nextBlue<=255);
+		try{
+			outColor = new Color(nextRed, nextGreen, nextBlue);
+		}catch(IllegalArgumentException e){
+			e.printStackTrace();
+		}
 		setColor(outColor, channelNo);
 	}
 	private void calculateNextColor(){
