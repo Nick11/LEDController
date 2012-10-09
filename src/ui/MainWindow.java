@@ -16,7 +16,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * maximum value for the colors
 	 */
-	public static final int  MAX=100;
+	public static final int  MAX=255;
 	/**
 	 * minimum value for the colors
 	 */

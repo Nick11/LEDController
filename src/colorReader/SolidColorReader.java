@@ -1,7 +1,6 @@
 package colorReader;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 public class SolidColorReader implements AbstractColorReader {
 	/**

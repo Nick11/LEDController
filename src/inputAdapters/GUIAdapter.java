@@ -90,9 +90,6 @@ public class GUIAdapter extends Thread{
 		assert(red<=MainWindow.MAX && green<=MainWindow.MAX && blue<=MainWindow.MAX);
 		assert(red>=MainWindow.MIN  && green>=MainWindow.MIN  && blue>=MainWindow.MIN );
 		updateParameters(modes[id]);
-		red = red*255/100;
-		green = green*255/100;
-		blue = blue*255/100;
 		Color color = new Color(red, green, blue);
 		reader = new SolidColorReader(color);
 		//readColorRefreshRate=FAST;

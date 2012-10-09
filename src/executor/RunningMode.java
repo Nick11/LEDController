@@ -10,6 +10,7 @@ import colorAverager.WeightedTimeColorAverager;
 import colorReader.AbstractColorReader;
 import colorReader.AreaPixelReader;
 import colorReader.SimplePixelReader;
+import colorReader.SolidColorReader;
 /**
  * Immutable data object. Changed by the UI and read by the <code>Executor</code>
  * This is introduced for synchronization purpose.
@@ -120,9 +121,9 @@ public class RunningMode {
 		
 		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
 		int noOutRefreshes = 1;
-		int outColorRefreshRate = 10;
+		int outColorRefreshRate = 100;
 		int screenNr = 0;
-		AbstractColorReader colorReader = new  SimplePixelReader(screenNr); //SimplePixelReader(screenNr);//RandomColorReader();// SolidColorReader(new Color(139,90,43));//
+		AbstractColorReader colorReader = new  SolidColorReader(new Color(255,0,200));  //AreaPixelReader(screenNr); //SimplePixelReader(screenNr);//RandomColorReader();
 		AbstractTimeColorAverager averager = new SimpleTimeColorAverager(colorReader, adapter, noOutRefreshes, channelNr);
 		return new RunningMode(colorReader, adapter,
 				averager,

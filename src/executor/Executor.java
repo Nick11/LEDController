@@ -1,13 +1,9 @@
 package executor;
 
 import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
 import inputAdapters.GUIAdapter;
-import colorAverager.AbstractTimeColorAverager;
 
 public class Executor extends Thread {
 	private volatile RunningMode desiredRunningMode;
@@ -23,7 +19,7 @@ public class Executor extends Thread {
 	
 	@Override
 	public void run(){
-		assert false;
+		System.out.println("executor");
 		// checking if another runningMode has been set
 		if( !currentRunningMode.equals(desiredRunningMode)){
 			currentRunningMode = desiredRunningMode;

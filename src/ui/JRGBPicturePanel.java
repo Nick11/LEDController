@@ -88,9 +88,6 @@ public class JRGBPicturePanel extends JPanel implements MouseListener {
 		getJPictureLabel().repaint();
 	}
 	public void updateLeftCornerImage(int red, int green, int blue){
-		red = red*255/100;
-		green = green*255/100;
-		blue= blue*255/100;
 		Color color = new Color(red, green, blue);
 		for(int x=0; x<cornerSize;x++){
 			for(int y=0 ;y<cornerSize; y++){
@@ -104,9 +101,9 @@ public class JRGBPicturePanel extends JPanel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		Point point = e.getPoint();
 		Color color = new Color(image.getRGB(point.x, point.y));
-		int red = (color.getRed()*100)/255;
-		int green = (color.getGreen()*100)/255;
-		int blue= (color.getBlue()*100)/255;
+		int red = color.getRed();
+		int green = color.getGreen();
+		int blue= color.getBlue();
 		updater.update(red, green, blue);
 	}
 	@Override

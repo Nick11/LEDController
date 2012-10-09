@@ -94,6 +94,8 @@ public class JSliderPanel extends JPanel implements ChangeListener,
 		int red = getRgbSliders()[0].getValue();
 		int green = getRgbSliders()[1].getValue();
 		int blue = getRgbSliders()[2].getValue();
+		assert(red>=MainWindow.MIN && green>=MainWindow.MIN && blue>=MainWindow.MIN);
+		assert(red<=MainWindow.MAX && green<=MainWindow.MAX && blue<=MainWindow.MAX);
 		updater.update(red,green, blue);
 	}
 	/**
