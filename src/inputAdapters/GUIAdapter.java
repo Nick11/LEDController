@@ -107,7 +107,7 @@ public class GUIAdapter extends Thread{
 		for(int i=0; i<colors.length; i++){
 			for(int j=0; j<colors[0].length; j++){
 				assert(colors[i][j]>= MainWindow.MIN && colors[i][j]<= MainWindow.MAX);
-				colors[i][j] = colors[i][j]*255/100;
+				colors[i][j] = colors[i][j];
 			}
 			colorArray[i] = new Color(colors[i][0],colors[i][1],colors[i][2]);
 		}

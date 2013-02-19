@@ -83,7 +83,7 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 		/*boolean redNotMax = (greenNorm+offset>1 || blueNorm+offset>1);
 		boolean greenNotMax = (redNorm+offset>1 || blueNorm+offset>1);
 		boolean blueNotMax = (greenNorm+offset>1 || redNorm+offset>1);*/
-		double blueConstant = -0.1;
+		double blueConstant = 0;//DO NEVER EVER USE A CONSTANT FACTOR WITHOUT NORMALIZING TO [MIN.MAX] AFTERWARDS!!
 		double blueFactor = 0.8;
 		double redWeight = redNorm;//(redNotMax? redNorm/2: redNorm); //a1*redNorm+a2*redNorm*redNorm;
 		double greenWeight = greenNorm;//(greenNotMax? greenNorm/2: greenNorm);//a1*greenNorm+a2*greenNorm*greenNorm;

@@ -64,7 +64,7 @@ public class JRGBPicturePanel extends JPanel implements MouseListener {
 	 * @return
 	 */
 	private void loadImage() {
-		java.net.URL imageURL = JRGBPicturePanel.class.getResource("rgb.png");
+		java.net.URL imageURL = JRGBPicturePanel.class.getResource("../rgb.png");
 		imageIcon = new ImageIcon(imageURL);
 		Image im = imageIcon.getImage();
 		image.getGraphics().drawImage(im, 0, 0, this.getWidth(), this.getHeight(), 0, 0, im.getWidth(null), im.getHeight(null),null);
