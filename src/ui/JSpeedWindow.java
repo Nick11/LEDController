@@ -63,11 +63,11 @@ public class JSpeedWindow extends JFrame {
 			for(int i=0; i< Executor.NOCHANNELS; i++){
 				jContentPane.add(new JLabel("Channel "+i));
 			}
-			jContentPane.add(new JLabel("readTime"));
+			jContentPane.add(new JLabel("Periods between Reading"));
 			for(int i=0; i< Executor.NOCHANNELS; i++){
 				jContentPane.add(getJReadColorRefreshRateTextFields()[i]);
 			}
-			jContentPane.add(new JLabel("LEDTime"));
+			jContentPane.add(new JLabel("Out color refresh rate"));
 			for(int i=0; i< Executor.NOCHANNELS; i++){
 				jContentPane.add(getJOutColorRefreshRateTextFields()[i]);
 			}
