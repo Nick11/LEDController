@@ -120,7 +120,7 @@ public class RunningMode {
 	public static RunningMode getDefault(int channelNr) {
 		
 		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
-		int noOutRefreshes = 5;
+		int noOutRefreshes = 100;
 		int outColorRefreshRate = 100;
 		int screenNr = 0;
 		AbstractColorReader colorReader = new SimplePixelReader(screenNr);// SolidColorReader(new Color(255,0,200));  //AreaPixelReader(screenNr); ////RandomColorReader();
