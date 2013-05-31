@@ -2,7 +2,7 @@ package colorAverager;
 
 import java.awt.Color;
 import outputAdapters.OutputAdapter;
-import colorReader.AbstractColorReader;
+import colorReader.ColorReaderInterface;
 
 public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 	
@@ -16,7 +16,7 @@ public class WeightedTimeColorAverager extends AbstractTimeColorAverager {
 	private int channelNo;
 	private int outCounter;
 	
-	public WeightedTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter, int periodsBetweenReading, int channelNo) {
+	public WeightedTimeColorAverager(ColorReaderInterface reader, OutputAdapter outputAdapter, int periodsBetweenReading, int channelNo) {
 		super(reader, outputAdapter, periodsBetweenReading, channelNo);
 		this.channelNo = channelNo;
 		this.outCounter = 0;

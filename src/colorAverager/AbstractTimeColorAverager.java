@@ -5,7 +5,7 @@ import java.util.TimerTask;
 
 import outputAdapters.OutputAdapter;
 
-import colorReader.AbstractColorReader;
+import colorReader.ColorReaderInterface;
 import colorReader.SimplePixelReader;
 
 /**
@@ -14,11 +14,11 @@ import colorReader.SimplePixelReader;
  *
  */
 public abstract class AbstractTimeColorAverager{
-	private AbstractColorReader reader;
+	private ColorReaderInterface reader;
 	private OutputAdapter outputAdapter;
 	private int channelNo;
 
-	public AbstractTimeColorAverager(AbstractColorReader reader, OutputAdapter outputAdapter,int noOutRefreshes, int channelNo){
+	public AbstractTimeColorAverager(ColorReaderInterface reader, OutputAdapter outputAdapter,int noOutRefreshes, int channelNo){
 		this.reader=reader;
 		this.outputAdapter = outputAdapter;
 		this.channelNo= channelNo;

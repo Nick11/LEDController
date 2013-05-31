@@ -2,7 +2,7 @@ package colorReader;
 
 import java.awt.Color;
 
-public class SolidColorReader implements AbstractColorReader {
+public class SolidColorReader implements ColorReaderInterface {
 	/**
 	 * array of colors to be shown
 	 */

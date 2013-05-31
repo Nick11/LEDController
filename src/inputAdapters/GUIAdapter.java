@@ -6,7 +6,7 @@ import outputAdapters.OutputAdapter;
 import colorAverager.AbstractTimeColorAverager;
 import colorAverager.SimpleTimeColorAverager;
 import colorAverager.WeightedTimeColorAverager;
-import colorReader.AbstractColorReader;
+import colorReader.ColorReaderInterface;
 import colorReader.SimplePixelReader;
 import colorReader.SolidColorReader;
 import ui.MainWindow;
@@ -36,7 +36,7 @@ public class GUIAdapter extends Thread{
 	/**
 	 * parameters of <code>mode</code>.
 	 */
-	private AbstractColorReader reader;
+	private ColorReaderInterface reader;
 	private OutputAdapter outputAdapter;
 	private AbstractTimeColorAverager averager ;
 	private int periodsBetweenReading;
@@ -163,8 +163,8 @@ public class GUIAdapter extends Thread{
 	}
 	
 	//getters
-	public AbstractColorReader[] getColorReader(){
-		AbstractColorReader[] colorReader= new AbstractColorReader[Executor.NOCHANNELS];
+	public ColorReaderInterface[] getColorReader(){
+		ColorReaderInterface[] colorReader= new ColorReaderInterface[Executor.NOCHANNELS];
 		RunningMode runningMode;
 		for(int i=0; i<Executor.NOCHANNELS; i++){
 			runningMode = executors[i].getCurrentRunningMode();

@@ -2,7 +2,7 @@ package colorReader;
 
 import java.awt.Color;
 
-public class RandomColorReader implements AbstractColorReader {
+public class RandomColorReader implements ColorReaderInterface {
 
 	@Override
 	public Color getColor() {

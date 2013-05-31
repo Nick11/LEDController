@@ -12,7 +12,7 @@ import java.util.Random;
 import outputAdapters.AreaTester;
 
 
-public class AreaPixelReader implements AbstractColorReader{
+public class AreaPixelReader implements ColorReaderInterface{
 	private Robot robot;
 	private BufferedImage image;
 	/**

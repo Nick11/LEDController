@@ -7,8 +7,9 @@ import outputAdapters.PanelAndLEDOutputAdapter;
 import colorAverager.AbstractTimeColorAverager;
 import colorAverager.SimpleTimeColorAverager;
 import colorAverager.WeightedTimeColorAverager;
-import colorReader.AbstractColorReader;
+import colorReader.ColorReaderInterface;
 import colorReader.AreaPixelReader;
+import colorReader.EnergyPixelReader;
 import colorReader.SimplePixelReader;
 import colorReader.SolidColorReader;
 /**
@@ -23,7 +24,7 @@ public class RunningMode {
 	 * creates a <code>Color</code>, depending on the concrete implementation, based on
 	 *  the screen color or a solid color.
 	 */
-    private final AbstractColorReader colorReader;
+    private final ColorReaderInterface colorReader;
     /**
      * manages all actions with the LED or Panel controlling
      */
@@ -69,7 +70,7 @@ public class RunningMode {
      * @param isRunning
      * @param channelNo
      */
-    public RunningMode(AbstractColorReader currentColorReader,OutputAdapter currentOutputAdapter,
+    public RunningMode(ColorReaderInterface currentColorReader,OutputAdapter currentOutputAdapter,
 				AbstractTimeColorAverager currentColorAverager,
 				int periodsBetweenReading, int outColorRefreshRate, int screenNr, boolean isRunning, int channelNo) {
 		this.colorReader = currentColorReader;
@@ -82,7 +83,7 @@ public class RunningMode {
 		this.channelNo = channelNo;
 	}
 
-	public AbstractColorReader getColorReader() {
+	public ColorReaderInterface getColorReader() {
 		return colorReader;
 	}
 
@@ -120,10 +121,10 @@ public class RunningMode {
 	public static RunningMode getDefault(int channelNr) {
 		
 		OutputAdapter adapter =  new PanelAndLEDOutputAdapter();
-		int noOutRefreshes = 100;
+		int noOutRefreshes = 1;
 		int outColorRefreshRate = 100;
 		int screenNr = 0;
-		AbstractColorReader colorReader = new SimplePixelReader(screenNr);// SolidColorReader(new Color(255,0,200));  //AreaPixelReader(screenNr); ////RandomColorReader();
+		ColorReaderInterface colorReader = new EnergyPixelReader(screenNr);// SolidColorReader(new Color(255,0,200));  //AreaPixelReader(screenNr); ////RandomColorReader();
 		AbstractTimeColorAverager averager = new WeightedTimeColorAverager(colorReader, adapter, noOutRefreshes, channelNr);
 		return new RunningMode(colorReader, adapter,
 				averager,

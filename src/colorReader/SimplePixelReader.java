@@ -9,8 +9,10 @@ import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import screenReader.ScreenReader;
 
-public class SimplePixelReader implements AbstractColorReader{
+
+public class SimplePixelReader implements ColorReaderInterface{
 	private Robot robot;
 	private BufferedImage image;
 	/**
@@ -30,8 +32,10 @@ public class SimplePixelReader implements AbstractColorReader{
 	 */
 	private int noPixelsToAnalyseY = 1080;
 	
+	private ScreenReader screenReader;
+	
 	public SimplePixelReader(int screenNr) {
-			GraphicsEnvironment graphicEnvironement = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			/*GraphicsEnvironment graphicEnvironement = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			GraphicsDevice[] screens = graphicEnvironement.getScreenDevices();
 			assert(screenNr>=0 && screenNr< screens.length);
 			GraphicsDevice analysedScreen = screens[screenNr];
@@ -40,9 +44,10 @@ public class SimplePixelReader implements AbstractColorReader{
 			} catch(AWTException e){
 				//TODO
 			}
-			DisplayMode displayMode = analysedScreen.getDisplayMode();
-			this.screenWidth = displayMode.getWidth();
-			this.screenHeight = displayMode.getHeight();
+			DisplayMode displayMode = analysedScreen.getDisplayMode();*/
+			this.screenWidth = 1920;
+			this.screenHeight = 1080;
+			this.screenReader = new ScreenReader(screenNr);
 	}
 	/**
 	 * 
@@ -57,7 +62,7 @@ public class SimplePixelReader implements AbstractColorReader{
 		
 		int[] color = new int[3];;
 		
-		image = robot.createScreenCapture(new Rectangle(xRange[0], yRange[0], xRange[1], yRange[1]));
+		image = screenReader.screenShot();//robot.createScreenCapture(new Rectangle(xRange[0], yRange[0], xRange[1], yRange[1]));
 		int noPixels = noPixelsToAnalyseX*noPixelsToAnalyseY;
 		int pixelStepX = (xRange[1]-xRange[0])/noPixelsToAnalyseX;
 		int pixelStepY = (yRange[1]-yRange[0])/noPixelsToAnalyseY;
